@@ -1,0 +1,14 @@
+.ant-collapse-content>.ant-collapse-content-box {
+  padding: 0px;
+}
+
+.ant-collapse-borderless>.ant-collapse-item {
+  border-bottom: 0px;
+}
+
+.ant-collapse-borderless>.ant-collapse-item:last-child,
+.ant-collapse-borderless>.ant-collapse-item:last-child .ant-collapse-header {
+  border-radius: 0;
+  text-align: center;
+  color: #096dd9;
+}

@@ -1,6 +1,7 @@
 import React from 'react';
 import { LocaleProvider, Layout, Menu, Icon, Empty, Drawer } from 'antd';
 import zhCN from 'antd/lib/locale-provider/zh_CN';
+import LoginForm from './componet/form/LoginForm.js'
 import './App.css';
 
 const { Content, Footer, Sider } = Layout;
@@ -68,14 +69,13 @@ class App extends React.Component {
             </Layout>
           </Content>
           <Drawer
+            width='500'
             visible={this.state.showDrawer}
             title="请登录"
             placement="right"
             onClose={this.onDrawerClose}
             closable={true}>
-            <p>Some contents...</p>
-            <p>Some contents...</p>
-            <p>Some contents...</p>
+            <LoginForm name={this.state.currentTab} />
           </Drawer>
           <Footer style={{ textAlign: 'center' }}>©2019 Powered by <a href='https://ant.design/'
             target='_blank' rel="noopener noreferrer">Ant Design</a></Footer>
