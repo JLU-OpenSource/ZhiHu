@@ -5,7 +5,7 @@ import {
 
 const Panel = Collapse.Panel;
 const showMore = "显示更多内容";
-const showLess = "显示更少内容";
+const showLess = "显示较少内容";
 class LoginForm extends React.Component {
 
     state = {
