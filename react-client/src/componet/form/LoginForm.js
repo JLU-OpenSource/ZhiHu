@@ -6,6 +6,7 @@ import {
 const Panel = Collapse.Panel;
 const showMore = "显示更多内容";
 const showLess = "显示较少内容";
+
 class LoginForm extends React.Component {
 
     state = {
@@ -51,7 +52,6 @@ class LoginForm extends React.Component {
                     <Button size='large' type="primary" htmlType="submit" block>登陆</Button>
                 </Form.Item>
                 <div style={{ textAlign: 'center' }}><p>未注册用户自动注册为本站用户</p></div>
-
             </Form>
 
         );

@@ -1,16 +1,43 @@
 import React from 'react';
-import { LocaleProvider, Layout, Menu, Icon, Empty, Drawer } from 'antd';
+import { LocaleProvider, Layout, Menu, Icon, Drawer } from 'antd';
 import zhCN from 'antd/lib/locale-provider/zh_CN';
-import LoginForm from './componet/form/LoginForm.js'
+import SimpleMDE from "react-simplemde-editor";
+import LoginForm from './componet/form/LoginForm.js';
+import Recommends from './componet/Recommeds.js'
+import Comments from './componet/Comments.js'
+
+import "easymde/dist/easymde.min.css";
 import './App.css';
 
 const { Content, Footer, Sider } = Layout;
 const SubMenu = Menu.SubMenu;
+const MdeToolbar = [
+  "bold", "italic", "heading", "|", "quote", "unordered-list",
+  "ordered-list", "link", "image", "table", "|", "side-by-side",
+  "fullscreen", "preview", "|",
+  {
+    name: "发布",
+    action: function customFunction(editor) {
+      alert("submit")
+    },
+    className: "fa fa-check",
+    title: "发布",
+  },
+  {
+    name: "custom",
+    action: function customFunction(editor) {
+      alert("save")
+    },
+    className: "fa fa-file",
+    title: "保存",
+  }
+];
 
 class App extends React.Component {
   state = {
     currentTab: 'recommend',
     showDrawer: false,
+    mdeCotent: ''
   }
 
   handleClick = (e) => {
@@ -26,10 +53,36 @@ class App extends React.Component {
       });
   }
 
+  handleMdeChange = value => {
+    this.setState({
+      mdeCotent: value
+    });
+  }
+
   onDrawerClose = (e) => {
     this.setState({
       showDrawer: false
     })
+  }
+
+  getContent = () => {
+    switch (this.state.currentTab) {
+      case 'question': return <Comments />;
+      case 'create-article': return <SimpleMDE id='mde'
+        onChange={this.handleMdeChange}
+        value={this.state.mdeCotent}
+        options={{
+          autofocus: true,
+          toolbar: MdeToolbar,
+          spellChecker: false,
+          status: false,
+          renderingConfig: {
+            singleLineBreaks: false,
+            codeSyntaxHighlighting: true,
+          },
+        }} />
+      default: return <Recommends />;
+    }
   }
 
   render() {
@@ -64,7 +117,7 @@ class App extends React.Component {
                   <Menu.Item key="user-panel" style={{ float: 'right' }}>
                     <Icon type="user" />未登陆</Menu.Item>
                 </Menu>
-                <Empty style={{ marginTop: '100px' }} />
+                {this.getContent()}
               </Content>
             </Layout>
           </Content>
