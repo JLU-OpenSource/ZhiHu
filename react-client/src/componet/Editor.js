@@ -35,7 +35,8 @@ BraftEditor.use(CodeHighlighter(options))
 
 BraftEditor.use(Table({
   defaultColumns: 5,
-  defaultRows: 3
+  defaultRows: 3,
+  withDropdown: true
 }))
 
 BraftEditor.use(Markdown())
