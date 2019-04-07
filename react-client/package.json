@@ -5,10 +5,15 @@
   "dependencies": {
     "antd": "^3.16.1",
     "babel-plugin-import": "^1.11.0",
+    "braft-editor": "^2.2.9",
+    "braft-extensions": "^0.0.18",
     "customize-cra": "^0.2.12",
+    "draft-js-prism": "^1.0.6",
+    "prismjs": "^1.16.0",
     "react": "^16.8.6",
     "react-app-rewired": "^2.1.1",
     "react-dom": "^16.8.6",
+    "react-markdown": "^4.0.6",
     "react-scripts": "2.1.8",
     "react-simplemde-editor": "^4.0.0",
     "simplemde": "^1.11.2"

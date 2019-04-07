@@ -1,37 +1,15 @@
 import React from 'react';
 import { LocaleProvider, Layout, Menu, Icon, Drawer } from 'antd';
 import zhCN from 'antd/lib/locale-provider/zh_CN';
-import SimpleMDE from "react-simplemde-editor";
+import Editor from './componet/Editor.js'
 import LoginForm from './componet/form/LoginForm.js';
 import Recommends from './componet/Recommeds.js'
 import Comments from './componet/Comments.js'
 
-import "easymde/dist/easymde.min.css";
 import './App.css';
 
 const { Content, Footer, Sider } = Layout;
 const SubMenu = Menu.SubMenu;
-const MdeToolbar = [
-  "bold", "italic", "heading", "|", "quote", "unordered-list",
-  "ordered-list", "link", "image", "table", "|", "side-by-side",
-  "fullscreen", "preview", "|",
-  {
-    name: "发布",
-    action: function customFunction(editor) {
-      alert("submit")
-    },
-    className: "fa fa-check",
-    title: "发布",
-  },
-  {
-    name: "custom",
-    action: function customFunction(editor) {
-      alert("save")
-    },
-    className: "fa fa-file",
-    title: "保存",
-  }
-];
 
 class App extends React.Component {
   state = {
@@ -68,19 +46,7 @@ class App extends React.Component {
   getContent = () => {
     switch (this.state.currentTab) {
       case 'question': return <Comments />;
-      case 'create-article': return <SimpleMDE id='mde'
-        onChange={this.handleMdeChange}
-        value={this.state.mdeCotent}
-        options={{
-          autofocus: true,
-          toolbar: MdeToolbar,
-          spellChecker: false,
-          status: false,
-          renderingConfig: {
-            singleLineBreaks: false,
-            codeSyntaxHighlighting: true,
-          },
-        }} />
+      case 'create-article': return <Editor />;
       default: return <Recommends />;
     }
   }
@@ -98,12 +64,15 @@ class App extends React.Component {
                   defaultOpenKeys={['home']}
                   onClick={this.handleClick} selectedKeys={[this.state.currentTab]}
                   style={{ height: '100%' }}>
+                  <Menu.Item key="user-panel"><Icon type="user" />未登陆</Menu.Item>
                   <SubMenu key="home" title={<span><Icon type="home" />首页</span>}>
                     <Menu.Item key="recommend"><span><Icon type="fire" />推荐</span></Menu.Item>
                     <Menu.Item key="question"><span><Icon type="question-circle" />问题</span></Menu.Item>
                     <Menu.Item key="article"><span><Icon type="read" />文章</span></Menu.Item>
                     <Menu.Item key="idea"><span><Icon type="star" />想法</span></Menu.Item>
                   </SubMenu>
+                  <Menu.Item key="create-article"><Icon type="edit" />撰写文章</Menu.Item>
+                  <Menu.Item key="submit-question"><Icon type="question" />发布问题</Menu.Item>
                   <Menu.Item key="collection"><span><Icon type="tags" />收藏夹</span></Menu.Item>
                   <Menu.Item key="draft"><span><Icon type="file" />草稿箱</span></Menu.Item>
                   <Menu.Item key="about"><span><Icon type="info-circle" />关于本站</span></Menu.Item>
@@ -111,12 +80,6 @@ class App extends React.Component {
                 </Menu>
               </Sider>
               <Content style={{ padding: '0 24px', minHeight: 600 }}>
-                <Menu onClick={this.handleClick} selectedKeys={[this.state.currentTab]} mode="horizontal">
-                  <Menu.Item key="create-article"><Icon type="edit" />撰写文章</Menu.Item>
-                  <Menu.Item key="submit-question"><Icon type="question" />发布问题</Menu.Item>
-                  <Menu.Item key="user-panel" style={{ float: 'right' }}>
-                    <Icon type="user" />未登陆</Menu.Item>
-                </Menu>
                 {this.getContent()}
               </Content>
             </Layout>
