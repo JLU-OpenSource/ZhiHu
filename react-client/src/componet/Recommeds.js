@@ -27,14 +27,14 @@ class Recommends extends React.Component {
         size="large"
         locale={<Empty />}
         dataSource={listData}
-        footer={<Pagination simple pageSize={3} defaultCurrent={2} total={8} style={{ marginTop: '10px', textAlign: 'center' }} />}
+        footer={<Pagination simple pageSize={3} defaultCurrent={1} total={8} style={{ marginTop: '10px', textAlign: 'center' }} />}
         renderItem={item => (
           <List.Item
             key={item.title}
             actions={
               [<IconText type="star-o" text="156 收藏" />, <IconText type="like-o" text="156 评论" />,
               <IconText type="message" text="2 评论" />, <IconText type="read" text="查看原答案" />]}>
-            <h3>什么是MarkDown？如何使用MarkDown？</h3>
+            <a href='javascrpit:void(0)'><h3>什么是MarkDown？如何使用MarkDown？</h3></a>
             <List.Item.Meta
               avatar={<Avatar src={item.avatar} />}
               title={<a href={item.href}>{item.title}</a>}

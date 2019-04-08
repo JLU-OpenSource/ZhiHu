@@ -14,14 +14,19 @@ const SubMenu = Menu.SubMenu;
 class App extends React.Component {
   state = {
     currentTab: 'recommend',
-    showDrawer: false,
+    drawerName: 'login-form',
+    drawerOptions: { width: '600', title: '请登录' },
+    drawerVisible: false,
     mdeCotent: ''
   }
 
   handleClick = (e) => {
     if (e.key === 'user-panel')
       this.setState({
-        showDrawer: true
+        drawerVisible: true,
+        drawerName: 'login-form',
+        drawerName: 'login-form',
+        drawerOptions: { width: '600', title: '请登录' }
       });
     else
       this.setState({
@@ -38,9 +43,7 @@ class App extends React.Component {
   }
 
   onDrawerClose = (e) => {
-    this.setState({
-      showDrawer: false
-    })
+    this.setState({ drawerVisible: false });
   }
 
   getContent = () => {
@@ -48,6 +51,13 @@ class App extends React.Component {
       case 'question': return <Comments />;
       case 'create-article': return <Editor />;
       default: return <Recommends />;
+    }
+  }
+
+  getDrawerContent = () => {
+    switch (this.state.drawerName) {
+      default:
+        return <LoginForm />;
     }
   }
 
@@ -85,13 +95,13 @@ class App extends React.Component {
             </Layout>
           </Content>
           <Drawer
-            width='500'
-            visible={this.state.showDrawer}
-            title="请登录"
+            width={this.state.drawerOptions.width}
+            visible={this.state.drawerVisible}
+            title={this.state.drawerOptions.title}
             placement="right"
             onClose={this.onDrawerClose}
             closable={true}>
-            <LoginForm name={this.state.currentTab} />
+            {this.getDrawerContent()}
           </Drawer>
           <Footer style={{ textAlign: 'center' }}>©2019 Powered by <a href='https://ant.design/'
             target='_blank' rel="noopener noreferrer">Ant Design</a></Footer>

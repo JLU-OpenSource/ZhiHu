@@ -12,22 +12,11 @@ import 'prismjs/components/prism-php'
 
 const options = {
   syntaxs: [
-    {
-      name: 'JavaScript',
-      syntax: 'javascript'
-    }, {
-      name: 'HTML',
-      syntax: 'html'
-    }, {
-      name: 'CSS',
-      syntax: 'css'
-    }, {
-      name: 'Java',
-      syntax: 'java',
-    }, {
-      name: 'PHP',
-      syntax: 'php'
-    }
+    { name: 'JavaScript', syntax: 'javascript' },
+    { name: 'HTML', syntax: 'html' },
+    { name: 'CSS', syntax: 'css' },
+    { name: 'Java', syntax: 'java', },
+    { name: 'PHP', syntax: 'php' }
   ]
 }
 
@@ -51,7 +40,7 @@ class Editor extends React.Component {
     notification['success']({
       message: '快捷键支持！',
       description: '您可以使用Microsoft Word的常用快捷键，例如：按下 Control+S 或 Cmd+S 保存您当前创作的内容。',
-      duration: 8,
+      duration: 5,
     });
   }
 
