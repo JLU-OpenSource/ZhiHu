@@ -55,3 +55,9 @@
   padding-left: 0;
   margin-bottom: 0;
 }
+
+.ant-typography ul li,
+.ant-typography ol li {
+  margin: 0;
+  padding: 0 0 0 4px;
+}

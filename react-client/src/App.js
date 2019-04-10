@@ -1,5 +1,5 @@
 import React from 'react';
-import { LocaleProvider, Layout, Menu, Icon, Drawer } from 'antd';
+import { LocaleProvider, Layout, Menu, Icon, Drawer, Typography, Empty } from 'antd';
 import zhCN from 'antd/lib/locale-provider/zh_CN';
 import Editor from './componet/Editor.js'
 import LoginForm from './componet/form/LoginForm.js';
@@ -17,14 +17,12 @@ class App extends React.Component {
     drawerName: 'login-form',
     drawerOptions: { width: '600', title: '请登录' },
     drawerVisible: false,
-    mdeCotent: ''
   }
 
   handleClick = (e) => {
     if (e.key === 'user-panel')
       this.setState({
         drawerVisible: true,
-        drawerName: 'login-form',
         drawerName: 'login-form',
         drawerOptions: { width: '600', title: '请登录' }
       });
@@ -36,21 +34,16 @@ class App extends React.Component {
       });
   }
 
-  handleMdeChange = value => {
-    this.setState({
-      mdeCotent: value
-    });
-  }
-
   onDrawerClose = (e) => {
     this.setState({ drawerVisible: false });
   }
 
   getContent = () => {
     switch (this.state.currentTab) {
+      case 'recommend': return <Recommends />;
       case 'question': return <Comments />;
       case 'create-article': return <Editor />;
-      default: return <Recommends />;
+      default: return <Empty style={{ marginTop: '200px' }} />;
     }
   }
 
@@ -90,7 +83,9 @@ class App extends React.Component {
                 </Menu>
               </Sider>
               <Content style={{ padding: '0 24px', minHeight: 600 }}>
-                {this.getContent()}
+                <Typography>
+                  {this.getContent()}
+                </Typography>
               </Content>
             </Layout>
           </Content>

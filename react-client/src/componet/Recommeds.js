@@ -32,9 +32,13 @@ class Recommends extends React.Component {
           <List.Item
             key={item.title}
             actions={
-              [<IconText type="star-o" text="156 收藏" />, <IconText type="like-o" text="156 评论" />,
-              <IconText type="message" text="2 评论" />, <IconText type="read" text="查看原答案" />]}>
-            <a href='javascrpit:void(0)'><h3>什么是MarkDown？如何使用MarkDown？</h3></a>
+              [
+                <IconText type="star-o" text="156 收藏" />,
+                <IconText type="like-o" text="156 评论" />,
+                <IconText type="message" text="2 评论" />,
+                <IconText type="read" text="查看原答案" />
+              ]}>
+            <a href='javascrpit:void(0)'><h4 style={{ fontSize: '16px' }}>什么是MarkDown？如何使用MarkDown？</h4></a>
             <List.Item.Meta
               avatar={<Avatar src={item.avatar} />}
               title={<a href={item.href}>{item.title}</a>}

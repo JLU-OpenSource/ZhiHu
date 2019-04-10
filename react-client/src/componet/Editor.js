@@ -38,6 +38,7 @@ class Editor extends React.Component {
 
   async componentDidMount() {
     notification['success']({
+      key: 'tips',
       message: '快捷键支持！',
       description: '您可以使用Microsoft Word的常用快捷键，例如：按下 Control+S 或 Cmd+S 保存您当前创作的内容。',
       duration: 5,

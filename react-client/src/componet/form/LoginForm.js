@@ -1,59 +1,90 @@
 import React from 'react';
-import {
-    Form, Icon, Input, Button, Collapse
-} from 'antd';
+import { Form, Icon, Input, Button, Collapse } from 'antd';
+import UserApi from '../../api/UserApi';
 
 const Panel = Collapse.Panel;
-const showMore = "显示更多内容";
-const showLess = "显示较少内容";
 
 class LoginForm extends React.Component {
 
     state = {
-        collapseInfo: showMore
+        collapseInfo: '注册新用户',
+        btnText: '登陆',
+        btnLoading: false,
+        register: false,
+        formValue: {}
     }
 
     handleSubmit = (e) => {
         e.preventDefault();
+        this.setState({ btnLoading: true })
+        if (this.state.register) {
+            UserApi.register(this.state.formValue);
+        } else {
+            console.log(UserApi.login(this.state.formValue))
+        }
+        this.setState({ btnLoading: false })
     }
 
     handleCollapseChange = (e) => {
         this.setState({
-            collapseInfo: e.length > 0 ? showLess : showMore
+            register: e.length > 0,
+            collapseInfo: e.length > 0 ? '返回登陆' : '注册新用户',
+            btnText: e.length > 0 ? '注册' : '登陆'
         })
+    }
 
+    handleInputChange = (name, e) => {
+        let input = this.state.formValue;
+        input[name] = e.target.value;
+        this.setState({ formValue: input });
     }
 
     render() {
         return (
-            <Form onSubmit={this.handleSubmit}>
+            <Form id='login-form' onSubmit={this.handleSubmit}>
                 <Form.Item>
-                    <Input allowClear required size='large' prefix={<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />} type="email" placeholder="邮箱地址" />
+                    <Input allowClear required size='large' type="email" placeholder="邮箱地址"
+                        onChange={(e) => { this.handleInputChange('email', e) }}
+                        prefix={<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                    />
                 </Form.Item>
                 <Form.Item style={{ marginBottom: '0px' }}>
-                    <Input.Password allowClear required size='large' prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder="输入密码" />
+                    <Input.Password allowClear required size='large' placeholder="输入密码"
+                        onChange={(e) => { this.handleInputChange('password', e) }}
+                        prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                    />
                 </Form.Item>
                 <Form.Item style={{ marginBottom: '0px' }}>
                     <Collapse bordered={false} onChange={this.handleCollapseChange}>
                         <Panel header={this.state.collapseInfo} showArrow={false}>
                             <Form.Item>
-                                <Input allowClear size='large' prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)', padding: '0px' }} />} type="text" placeholder="用户昵称" />
+                                <Input required={this.state.register} allowClear
+                                    onChange={(e) => { this.handleInputChange('name', e) }}
+                                    size='large' type="text" placeholder="用户昵称"
+                                    prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)', padding: '0px' }} />} />
                             </Form.Item>
                             <Form.Item>
-                                <Input allowClear size='large' prefix={<Icon type="smile" style={{ color: 'rgba(0,0,0,.25)', padding: '0px' }} />} type="url" placeholder="头像链接" />
+                                <Input required={this.state.register} allowClear
+                                    onChange={(e) => { this.handleInputChange('avatar', e) }}
+                                    size='large' type="url" placeholder="头像链接"
+                                    prefix={<Icon type="smile" style={{ color: 'rgba(0,0,0,.25)', padding: '0px' }} />} />
                             </Form.Item>
                             <Form.Item>
-                                <Input allowClear size='large' prefix={<Icon type="cloud" style={{ color: 'rgba(0,0,0,.25)', padding: '0px' }} />} type="url" placeholder="个人站点" />
+                                <Input required={this.state.register} allowClear
+                                    onChange={(e) => { this.handleInputChange('site', e) }}
+                                    size='large' type="url" placeholder="个人站点"
+                                    prefix={<Icon type="cloud" style={{ color: 'rgba(0,0,0,.25)', padding: '0px' }} />} />
                             </Form.Item>
                         </Panel>
                     </Collapse>
                 </Form.Item>
                 <Form.Item>
-                    <Button size='large' type="primary" htmlType="submit" block>登陆</Button>
+                    <Button size='large' type="primary" htmlType="submit"
+                        block loading={this.state.btnLoading}>
+                        {this.state.btnText}
+                    </Button>
                 </Form.Item>
-                <div style={{ textAlign: 'center' }}><p>未注册用户自动注册为本站用户</p></div>
             </Form>
-
         );
     }
 }
