@@ -2,7 +2,7 @@ import React from 'react';
 import { List, Avatar, Icon, Empty, Pagination } from 'antd';
 
 const listData = [];
-for (let i = 0; i < 3; i++) {
+for (let i = 0; i < 2; i++) {
   listData.push(
     {
       href: '#',
@@ -17,7 +17,7 @@ for (let i = 0; i < 3; i++) {
   );
 }
 
-class Recommends extends React.Component {
+class Collects extends React.Component {
 
   render() {
     return (
@@ -50,4 +50,4 @@ class Recommends extends React.Component {
   }
 }
 
-export default Recommends;
+export default Collects;

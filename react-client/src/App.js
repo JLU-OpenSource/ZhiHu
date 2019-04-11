@@ -7,9 +7,12 @@ import Recommends from './componet/Recommeds.js'
 import Questions from './componet/Questions.js';
 import Comments from './componet/Comments.js';
 import Answer from "./componet/Answer.js";
+import Article from './componet/Article.js';
+import Answers from './componet/Answers.js';
+import Collects from './componet/Collects.js';
 
 import './App.css';
-import Article from './componet/Article.js';
+
 
 const { Content, Footer, Sider } = Layout;
 const SubMenu = Menu.SubMenu;
@@ -58,21 +61,30 @@ class App extends React.Component {
     })
   }
 
+  handleAllAnswerClick = (question) => {
+    this.setState({
+      content: 'answers',
+    })
+  }
+
   handleFullAnswerClick = (question) => {
     this.setState({
       content: 'answer',
-      tab: 'recommend'
     })
   }
 
   getContent = () => {
     switch (this.state.content) {
       case 'recommend': return <Recommends fullAnswerClick={this.handleFullAnswerClick} />;
-      case 'answer': return <Answer />;
-      case 'question': return <Questions createAnswerClick={this.handleCreateAnswerClick} />;
+      case 'answer': return <Answer createAnswerClick={this.handleCreateAnswerClick} />;
+      case 'answers': return <Answers fullAnswerClick={this.handleFullAnswerClick} />
+      case 'question': return <Questions
+        createAnswerClick={this.handleCreateAnswerClick}
+        allAnswerClick={this.handleAllAnswerClick} />;
       case 'article': return <Article />
       case 'editor': return <Editor options={this.state.editorOptions} />;
-      case 'idea': return <Comments />
+      case 'idea': return <Comments />;
+      case 'collection': return <Collects />;
       default: return <Empty style={{ marginTop: '200px' }} />;
     }
   }

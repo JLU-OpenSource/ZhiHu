@@ -30,7 +30,7 @@ class Questions extends React.Component {
           <List.Item
             actions={
               [
-                <span><Icon type="message" style={{ marginRight: 8 }} />查看 2 个答案</span>,
+                <span onClick={() => this.props.allAnswerClick(item)}><Icon type="message" style={{ marginRight: 8 }} />查看 2 个答案</span>,
                 <span onClick={() => this.props.createAnswerClick(item)}><Icon type="edit" style={{ marginRight: 8 }} />撰写答案</span>
               ]}>
             <a href='javascrpit:void(0)'><h3>{item.title}</h3></a>

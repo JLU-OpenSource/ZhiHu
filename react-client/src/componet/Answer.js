@@ -48,7 +48,11 @@ class Answer extends React.Component {
 
   state = {
     comment: '',
-    showComments: false
+    showComments: false,
+    collectAcitve: false,
+    collectCount: 156,
+    agreeAcitve: true,
+    agreeCount: 156
   }
 
   handleSubmit = (e) => {
@@ -69,6 +73,34 @@ class Answer extends React.Component {
     this.setState({ comment: e.target.value });
   }
 
+  onCollectClick = () => {
+    this.setState({
+      collectAcitve: !this.state.collectAcitve,
+      collectCount: this.state.collectCount + (this.state.collectAcitve ? -1 : 1)
+    },
+      () => {
+        if (this.state.collectAcitve) {
+          message.success("已添加到收藏夹");
+        } else {
+          message.success("已取消收藏");
+        }
+      })
+  }
+
+  onAgreeClick = () => {
+    this.setState({
+      agreeAcitve: !this.state.agreeAcitve,
+      agreeCount: this.state.agreeCount + (this.state.agreeAcitve ? -1 : 1)
+    },
+      () => {
+        if (this.state.agreeAcitve) {
+          message.success("已赞同");
+        } else {
+          message.success("已取消赞同");
+        }
+      })
+  }
+
   render() {
     return (
       <div>
@@ -81,9 +113,14 @@ class Answer extends React.Component {
             <List.Item
               actions={
                 [
-                  <span><Icon type="star-o" style={{ marginRight: 8 }} />156 收藏</span>,
-                  <span><Icon type="like-o" style={{ marginRight: 8 }} />156 赞同</span>,
-                  <span onClick={() => this.setState({ showComments: true })}><Icon type="message" style={{ marginRight: 8 }} />156 评论</span>
+                  <span className={this.state.collectAcitve ? "active" : null}
+                    onClick={() => this.onCollectClick()}
+                  ><Icon type="star-o" style={{ marginRight: 8 }} />{this.state.collectCount} 收藏</span>,
+                  <span className={this.state.agreeAcitve ? "active" : null}
+                    onClick={() => this.onAgreeClick()}
+                  ><Icon type="like-o" style={{ marginRight: 8 }} />{this.state.agreeCount} 赞同</span>,
+                  <span onClick={() => this.setState({ showComments: true })}><Icon type="message" style={{ marginRight: 8 }} />156 评论</span>,
+                  <span onClick={() => this.props.createAnswerClick(item)}><Icon type="edit" style={{ marginRight: 8 }} />撰写答案</span>
                 ]}>
               <a href='javascrpit:void(0)'><h3>{item.title}</h3></a>
               <List.Item.Meta

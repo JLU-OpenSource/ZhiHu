@@ -17,7 +17,7 @@ for (let i = 0; i < 3; i++) {
   );
 }
 
-class Recommends extends React.Component {
+class Answers extends React.Component {
 
   render() {
     return (
@@ -50,4 +50,4 @@ class Recommends extends React.Component {
   }
 }
 
-export default Recommends;
+export default Answers;
