@@ -1,5 +1,5 @@
 import React from 'react';
-import { Comment, Tooltip, List, Icon, } from 'antd';
+import { Comment, Tooltip, List, Icon, Pagination } from 'antd';
 import moment from 'moment';
 import 'moment/locale/zh-cn';
 
@@ -57,20 +57,23 @@ class Comments extends React.Component {
 
   render() {
     return (
-      <List
-        className="comment-list"
-        itemLayout="horizontal"
-        dataSource={data}
-        renderItem={item => (
-          <Comment
-            actions={item.actions}
-            author={item.author}
-            avatar={item.avatar}
-            content={item.content}
-            datetime={item.datetime}
-          />
-        )}
-      />);
+      <div>
+        <List
+          className="comment-list"
+          itemLayout="horizontal"
+          dataSource={data}
+          renderItem={item => (
+            <Comment
+              actions={item.actions}
+              author={item.author}
+              avatar={item.avatar}
+              content={item.content}
+              datetime={item.datetime}
+            />
+          )}
+        />
+        <Pagination simple pageSize={3} defaultCurrent={1} total={8} style={{ marginTop: '30px', textAlign: 'center' }} />
+      </div>);
   }
 }
 

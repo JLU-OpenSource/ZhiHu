@@ -1,6 +1,6 @@
 import React from 'react'
 import BraftEditor from 'braft-editor'
-import { notification } from "antd";
+import { notification, Typography } from "antd";
 import Table from 'braft-extensions/dist/table'
 import Markdown from 'braft-extensions/dist/markdown'
 import CodeHighlighter from 'braft-extensions/dist/code-highlighter'
@@ -33,16 +33,31 @@ BraftEditor.use(Markdown())
 class Editor extends React.Component {
 
   state = {
-    editorState: BraftEditor.createEditorState(null)
+    editorState: BraftEditor.createEditorState(null),
+    options: this.props.options
   }
 
   async componentDidMount() {
-    notification['success']({
-      key: 'tips',
-      message: '快捷键支持！',
-      description: '您可以使用Microsoft Word的常用快捷键，例如：按下 Control+S 或 Cmd+S 保存您当前创作的内容。',
-      duration: 5,
-    });
+    console.log(this.state.options)
+    const type = this.state.options.type;
+    if (type === 'article') {
+      notification['success']({
+        key: 'tips',
+        message: '快捷键支持！',
+        description: '您可以使用Microsoft Word的常用快捷键，例如：按下 Control+S 或 Cmd+S 保存您当前创作的内容。',
+        duration: 5,
+      });
+    } else if (type === 'question') {
+      notification['info']({
+        key: 'tips',
+        message: '正在撰写答案',
+        description: '您正在为问题 "' + this.state.options.body.title + '" 撰写答案，按下 Control+S 或 Cmd+S 保存，或点击右上角发布按钮发布答案。',
+        duration: 8,
+      });
+    }
+  }
+
+  async componentWillUnmount() {
   }
 
   handleEditorChange = (editorState) => {
@@ -55,7 +70,6 @@ class Editor extends React.Component {
   }
 
   submitToServer = () => {
-    console.log("123")
   }
 
   render() {
@@ -63,16 +77,18 @@ class Editor extends React.Component {
       {
         key: 'submit',
         type: 'button',
-        text: '发布文章',
+        text: '发布',
         onClick: this.submitToServer
       }]
     const { editorState } = this.state
     return (
-      <BraftEditor
-        onChange={this.handleEditorChange}
-        onSave={this.submitContent}
-        extendControls={extendControls}
-        value={editorState} />
+      <Typography>
+        <BraftEditor
+          onChange={this.handleEditorChange}
+          onSave={this.submitContent}
+          extendControls={extendControls}
+          value={editorState} />
+      </Typography>
     )
   }
 }

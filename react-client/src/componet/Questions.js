@@ -17,12 +17,7 @@ for (let i = 0; i < 3; i++) {
   );
 }
 
-class Recommends extends React.Component {
-
-  handleFullAnswerClick = () => {
-    console.log(123);
-  }
-
+class Questions extends React.Component {
   render() {
     return (
       <List
@@ -35,10 +30,8 @@ class Recommends extends React.Component {
           <List.Item
             actions={
               [
-                <span><Icon type="star-o" style={{ marginRight: 8 }} />156 收藏</span>,
-                <span><Icon type="like-o" style={{ marginRight: 8 }} />156 赞同</span>,
-                <span><Icon type="message" style={{ marginRight: 8 }} />156 收藏</span>,
-                <span onClick={() => this.props.fullAnswerClick(item)}><Icon type="read" style={{ marginRight: 8 }} />查看原答案</span>
+                <span><Icon type="message" style={{ marginRight: 8 }} />查看 2 个答案</span>,
+                <span onClick={() => this.props.createAnswerClick(item)}><Icon type="edit" style={{ marginRight: 8 }} />撰写答案</span>
               ]}>
             <a href='javascrpit:void(0)'><h3>{item.title}</h3></a>
             <List.Item.Meta
@@ -54,4 +47,4 @@ class Recommends extends React.Component {
   }
 }
 
-export default Recommends;
+export default Questions;
