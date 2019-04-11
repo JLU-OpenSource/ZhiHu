@@ -2,7 +2,7 @@ import React from 'react';
 import { List, Avatar, Icon, Empty, Pagination } from 'antd';
 
 const listData = [];
-for (let i = 0; i < 3; i++) {
+for (let i = 0; i < 1; i++) {
   listData.push(
     {
       href: '#',
