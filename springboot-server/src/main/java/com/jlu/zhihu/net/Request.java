@@ -19,8 +19,6 @@ package com.jlu.zhihu.net;
 import com.alibaba.fastjson.JSONObject;
 import com.jlu.zhihu.model.User;
 
-import java.text.DateFormat;
-import java.util.Date;
 import java.util.Map;
 
 @SuppressWarnings("unused")
@@ -32,7 +30,7 @@ public class Request<Body> {
 
     public Map<String, String> args;
 
-    public String time = DateFormat.getDateTimeInstance().format(new Date());
+    public String time;
 
     @Override
     public String toString() {
