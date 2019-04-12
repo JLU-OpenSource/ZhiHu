@@ -19,6 +19,7 @@ package com.jlu.zhihu.controller;
 import com.jlu.zhihu.model.User;
 import com.jlu.zhihu.net.Request;
 import com.jlu.zhihu.net.Response;
+import com.jlu.zhihu.security.TokenManager;
 import com.jlu.zhihu.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,10 +33,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     private final UserService userService;
+    private final TokenManager tokenManager;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, TokenManager tokenManager) {
         this.userService = userService;
+        this.tokenManager = tokenManager;
     }
 
     @PostMapping("/register")
@@ -45,8 +48,7 @@ public class UserController {
             response.status = HttpStatus.FORBIDDEN;
             response.body = "user already exist.";
         } else {
-            userService.register(request.body);
-            response.body = "success";
+            response.body = tokenManager.generateToken(userService.register(request.body));
         }
         return response;
     }
@@ -54,8 +56,9 @@ public class UserController {
     @PostMapping("/login")
     public Response<String> login(@RequestBody Request<User> request) {
         Response<String> response = new Response<>();
-        if (userService.login(request.body)) {
-            response.body = "login success";
+        User user = userService.login(request.body);
+        if (user != null) {
+            response.body = tokenManager.generateToken(user);
         } else {
             response.status = HttpStatus.NOT_FOUND;
         }

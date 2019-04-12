@@ -46,9 +46,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean login(User user) {
+    public User login(User user) {
         user.email = Encoder.md5(user.email);
         user.password = Encoder.md5(user.password);
-        return userRepository.existsByEmailAndPassword(user.email, user.password);
+        return userRepository.findByEmailAndPassword(user.email, user.password);
     }
 }

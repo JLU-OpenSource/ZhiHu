@@ -24,5 +24,5 @@ public interface UserService {
 
     User register(User user);
 
-    boolean login(User user);
+    User login(User user);
 }
