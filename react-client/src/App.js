@@ -12,19 +12,29 @@ import Answers from './componet/Answers.js';
 import Collects from './componet/Collects.js';
 
 import './App.css';
+import UserApi from './api/UserApi.js';
 
 
 const { Content, Footer, Sider } = Layout;
 const SubMenu = Menu.SubMenu;
 
 class App extends React.Component {
+
   state = {
     tab: 'recommend',
     content: 'recommend',
     loginFormVisible: false,
     editorOptions: {
       type: 'article', body: {}
-    }
+    },
+    currentUser: null,
+  }
+
+  async componentDidMount() {
+    const _this = this;
+    UserApi.getCurrentUser(function (user) {
+      _this.setState({ currentUser: user })
+    });
   }
 
   handleTabClick = (e) => {
@@ -102,7 +112,7 @@ class App extends React.Component {
                   defaultOpenKeys={['home']}
                   onClick={this.handleTabClick} selectedKeys={[this.state.tab]}
                   style={{ height: '100%' }}>
-                  <Menu.Item key="user-panel"><Icon type="user" />未登陆</Menu.Item>
+                  <Menu.Item key="user-panel"><Icon type="user" />{this.state.currentUser == null ? '未登陆' : this.state.currentUser.name}</Menu.Item>
                   <SubMenu key="home" title={<span><Icon type="home" />首页</span>}>
                     <Menu.Item key="recommend"><span><Icon type="fire" />推荐</span></Menu.Item>
                     <Menu.Item key="question"><span><Icon type="question-circle" />问题</span></Menu.Item>
@@ -124,11 +134,11 @@ class App extends React.Component {
           <Drawer
             width={500}
             visible={this.state.loginFormVisible}
-            title='请登录'
+            title={this.state.currentUser == null ? '请登录' : this.state.currentUser.name}
             placement="right"
             onClose={this.onDrawerClose}
             closable={true}>
-            <LoginForm />
+            {this.state.currentUser == null ? <LoginForm /> : <Empty />}
           </Drawer>
           <Footer style={{ textAlign: 'center' }}>©2019 Powered by <a href='https://ant.design/'
             target='_blank' rel="noopener noreferrer">Ant Design</a></Footer>

@@ -16,7 +16,6 @@ const AjaxApi = {
   post: function (url, data) {
     return fetch(host + url, {
       body: JSON.stringify(data),
-      credentials: 'include',
       headers: {
         'token': sessionStorage.getItem('token'),
         'Content-Type': 'application/json',

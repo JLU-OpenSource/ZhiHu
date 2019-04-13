@@ -64,4 +64,13 @@ public class UserController {
         }
         return response;
     }
+
+    @PostMapping("/api/email")
+    public Response<User> getUser(@RequestBody Request<String> request) {
+        Response<User> response = new Response<>();
+        response.body = userService.findUserByEmail(request.body);
+        if (response.body == null)
+            response.status = HttpStatus.NOT_FOUND;
+        return response;
+    }
 }

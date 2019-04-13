@@ -1,6 +1,7 @@
 import AjaxApi from './AjaxApi.js';
 
 const UserApi = {
+
   login: function (user, callback) {
     AjaxApi.post('/user/login', AjaxApi.body(user, {})
     ).then(response => {
@@ -11,6 +12,7 @@ const UserApi = {
       callback(response.status === 200)
     })
   },
+
   register: function (user, callback) {
     AjaxApi.post('/user/register', AjaxApi.body(user, {})
     ).then(response => {
@@ -19,6 +21,13 @@ const UserApi = {
         sessionStorage.setItem('email', user.email);
       }
       callback(response.status === 200)
+    })
+  },
+
+  getCurrentUser: function (callback) {
+    AjaxApi.post('/user/api/email', AjaxApi.body(sessionStorage.getItem('email'), {})
+    ).then(response => {
+      callback(response.status === 200 ? response.body : null);
     })
   }
 }
