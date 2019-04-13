@@ -21,10 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 
 @Component
@@ -57,9 +54,13 @@ public class TokenManager {
     }
 
     private void cleanToken() {
+        List<String> expiredTokens = new ArrayList<>();
         for (String token : tokenPool.keySet()) {
             if (System.currentTimeMillis() - tokenPool.get(token) > INTERVAL)
-                tokenPool.remove(token);
+                expiredTokens.add(token);
+        }
+        for (String token : expiredTokens) {
+            tokenPool.remove(token);
         }
     }
 }

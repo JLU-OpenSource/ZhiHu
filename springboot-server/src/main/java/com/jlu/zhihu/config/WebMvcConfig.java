@@ -19,6 +19,7 @@ package com.jlu.zhihu.config;
 import com.jlu.zhihu.security.TokenInterceptor;
 import com.jlu.zhihu.security.TokenManager;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -26,11 +27,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Configuration
-public class TokenWebMvcConfig implements WebMvcConfigurer {
+public class WebMvcConfig implements WebMvcConfigurer {
 
     private final TokenManager tokenManager;
 
-    public TokenWebMvcConfig(TokenManager tokenManager) {
+    public WebMvcConfig(TokenManager tokenManager) {
         this.tokenManager = tokenManager;
     }
 
@@ -44,4 +45,15 @@ public class TokenWebMvcConfig implements WebMvcConfigurer {
                 .addPathPatterns(PATH_PATTERNS);
     }
 
+    /**
+     * Configure cross origin requests processing.
+     */
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedOrigins("*")
+                .allowedMethods("POST", "GET", "PUT", "OPTIONS", "DELETE")
+                .maxAge(3600)
+                .allowCredentials(true);
+    }
 }
