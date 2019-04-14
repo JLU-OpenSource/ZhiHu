@@ -1,6 +1,6 @@
 import React from 'react'
 import BraftEditor from 'braft-editor'
-import { notification, Typography } from "antd";
+import { notification, Typography, Modal, Radio, Input, Form, message } from "antd";
 import Table from 'braft-extensions/dist/table'
 import Markdown from 'braft-extensions/dist/markdown'
 import CodeHighlighter from 'braft-extensions/dist/code-highlighter'
@@ -9,6 +9,8 @@ import 'braft-extensions/dist/table.css'
 import 'braft-extensions/dist/code-highlighter.css'
 import 'prismjs/components/prism-java'
 import 'prismjs/components/prism-php'
+
+import EditorApi from '../api/EditorApi.js';
 
 const options = {
   syntaxs: [
@@ -19,6 +21,8 @@ const options = {
     { name: 'PHP', syntax: 'php' }
   ]
 }
+
+const RadioGroup = Radio.Group;
 
 BraftEditor.use(CodeHighlighter(options))
 
@@ -34,11 +38,15 @@ class Editor extends React.Component {
 
   state = {
     editorState: BraftEditor.createEditorState(null),
-    options: this.props.options
+    options: this.props.options,
+    modalVisible: false,
+    contentType: 'question',
+    contentTitle: '',
+    saved: false,
+    confirmLoading: false
   }
 
   async componentDidMount() {
-    console.log(this.state.options)
     const type = this.state.options.type;
     if (type === 'article') {
       notification['success']({
@@ -70,6 +78,42 @@ class Editor extends React.Component {
   }
 
   submitToServer = () => {
+    this.setState({ modalVisible: true })
+  }
+
+  handleSubmit = () => {
+    if (this.state.contentTitle.length === 0 || this.state.contentTitle.trim().length === 0)
+      message.error("标题不能为空");
+    else {
+      this.setState({ confirmLoading: true })
+      const rawString = this.state.editorState.toRAW(true)
+      const htmlString = this.state.editorState.toHTML()
+      const drfat = {
+        'title': this.state.contentTitle,
+        'author': JSON.parse(sessionStorage.getItem('user'))
+      }
+      console.log(JSON.stringify(drfat))
+      const _this = this;
+      EditorApi.saveDraft(drfat, htmlString, rawString, function callback(response) {
+        _this.setState({ confirmLoading: false, modalVisible: false, saved: true })
+        message.success(' "' + response.title + '" 已经保存');
+      })
+    }
+  }
+
+  handleCancel = () => {
+    this.setState({ modalVisible: false })
+  }
+
+  onRadioChange = (e) => {
+    console.log(e.target.value)
+    this.setState({
+      contentType: e.target.value,
+    });
+  }
+
+  handleTitleChange = (e) => {
+    this.setState({ contentTitle: e.target.value })
   }
 
   render() {
@@ -88,6 +132,24 @@ class Editor extends React.Component {
           onSave={this.submitContent}
           extendControls={extendControls}
           value={editorState} />
+        <Modal
+          title="发布"
+          visible={this.state.modalVisible}
+          onOk={this.handleSubmit}
+          onCancel={this.handleCancel}
+          confirmLoading={this.state.confirmLoading}
+        >
+          <Form>
+            <Form.Item>
+              <RadioGroup onChange={this.onRadioChange} value={this.state.contentType}>
+                <Radio value='question'>发布问题</Radio>
+                <Radio value='article'>发表文章</Radio>
+                <Radio value='save'>仅保存</Radio>
+              </RadioGroup>
+            </Form.Item>
+            <Input placeholder='输入标题' onChange={this.handleTitleChange} />
+          </Form>
+        </Modal>
       </Typography>
     )
   }

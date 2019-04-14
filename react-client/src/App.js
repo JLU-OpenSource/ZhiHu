@@ -42,13 +42,17 @@ class App extends React.Component {
       this.setState({ loginFormVisible: true, });
     else {
       switch (e.key) {
-        case 'editor': this.setState({
-          content: 'editor',
-          tab: 'editor',
-          editorOptions: {
-            type: 'article', body: {}
-          }
-        }); break;
+        case 'editor':
+          if (this.state.currentUser == null) {
+            this.setState({ loginFormVisible: true, });
+          } else
+            this.setState({
+              content: 'editor',
+              tab: 'editor',
+              editorOptions: {
+                type: 'article', body: {}
+              }
+            }); break;
         default: this.setState({
           content: e.key,
           tab: e.key
