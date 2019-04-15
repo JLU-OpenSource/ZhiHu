@@ -18,7 +18,8 @@
     <string name="app_name">知乎</string>
     <string name="search_in_zhihu">搜索知乎内容</string>
     <string name="slogan">发现更大的世界</string>
-    <string name="login">登陆</string>
+    <string name="login">登陆知乎</string>
+    <string name="login_more">登陆知乎发现更多内容</string>
     <string name="auto_register">未注册账号自动注册</string>
     <string name="email_address">邮件地址</string>
     <string name="input_password">输入密码</string>
@@ -29,4 +30,8 @@
     <string name="tab_article">文章</string>
     <string name="tab_idea">想法</string>
     <string name="tab_my">我的</string>
+
+    <string name="about_zhihu">关于知乎</string>
+    <string name="support">帮助支持</string>
+    <string name="check_update">检查更新</string>
 </resources>

@@ -22,5 +22,6 @@
     <color name="color_search_box_background">#F0F0F0</color>
     <color name="color_black">#000000</color>
     <color name="color_dark_grey">#3C3C3C</color>
+    <color name="color_light_grey">#ECECEC</color>
     <color name="color_list_item_content">#4D4D4D</color>
 </resources>
