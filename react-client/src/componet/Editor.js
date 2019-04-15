@@ -11,6 +11,7 @@ import 'prismjs/components/prism-java'
 import 'prismjs/components/prism-php'
 
 import EditorApi from '../api/EditorApi.js';
+import AjaxApi from '../api/AjaxApi.js';
 
 const options = {
   syntaxs: [
@@ -63,6 +64,16 @@ class Editor extends React.Component {
         duration: 8,
       });
     }
+    if (this.state.options.body != null) {
+      switch (this.state.options.type) {
+        case 'draft':
+          fetch(AjaxApi.host + "/draft/" + this.state.options.body.id + ".html")
+            .then(response => response.text())
+            .then(text => this.setState({ editorState: BraftEditor.createEditorState(text) }))
+          break;
+        default: break;
+      }
+    }
   }
 
   async componentWillUnmount() {
@@ -85,19 +96,20 @@ class Editor extends React.Component {
     if (this.state.contentTitle.length === 0 || this.state.contentTitle.trim().length === 0)
       message.error("标题不能为空");
     else {
-      this.setState({ confirmLoading: true })
-      const rawString = this.state.editorState.toRAW(true)
-      const htmlString = this.state.editorState.toHTML()
-      const drfat = {
-        'title': this.state.contentTitle,
-        'author': JSON.parse(sessionStorage.getItem('user'))
+      if (this.state.contentType === 'draft') {
+        this.setState({ confirmLoading: true })
+        const rawString = this.state.editorState.toRAW()
+        const htmlString = this.state.editorState.toHTML()
+        const drfat = {
+          'title': this.state.contentTitle,
+          'author': JSON.parse(sessionStorage.getItem('user'))
+        }
+        const _this = this;
+        EditorApi.saveDraft(drfat, htmlString, rawString, function callback(response) {
+          _this.setState({ confirmLoading: false, modalVisible: false, saved: true })
+          message.success(' "' + response.title + '" 已经保存');
+        })
       }
-      console.log(JSON.stringify(drfat))
-      const _this = this;
-      EditorApi.saveDraft(drfat, htmlString, rawString, function callback(response) {
-        _this.setState({ confirmLoading: false, modalVisible: false, saved: true })
-        message.success(' "' + response.title + '" 已经保存');
-      })
     }
   }
 
@@ -144,7 +156,7 @@ class Editor extends React.Component {
               <RadioGroup onChange={this.onRadioChange} value={this.state.contentType}>
                 <Radio value='question'>发布问题</Radio>
                 <Radio value='article'>发表文章</Radio>
-                <Radio value='save'>仅保存</Radio>
+                <Radio value='draft'>仅保存</Radio>
               </RadioGroup>
             </Form.Item>
             <Input placeholder='输入标题' onChange={this.handleTitleChange} />

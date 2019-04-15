@@ -23,9 +23,13 @@ import java.util.List;
 
 public interface DraftService {
 
+    String DRAFT_PATH = "/Users/chengjie/github/ZhiHu/draft/";
+
+    int SUMMARY_LENGTH = 32;
+
     List<Draft> findAllByAuthor(User author);
 
-    Draft saveDraft(Draft draft, String html,String raw);
+    Draft saveDraft(Draft draft, String html, String raw);
 
     Draft removeDraft(Draft draft);
 }

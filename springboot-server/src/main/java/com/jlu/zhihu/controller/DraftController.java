@@ -46,7 +46,6 @@ public class DraftController {
 
     @PostMapping("/save")
     public Response<Draft> saveDraft(@RequestBody Request<Draft> request) {
-        System.out.println(request);
         Response<Draft> response = new Response<>();
         if (request.user.equals(request.body.author)) {
             response.body = draftService.saveDraft(request.body,

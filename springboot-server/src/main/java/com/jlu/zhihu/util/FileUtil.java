@@ -18,23 +18,26 @@ package com.jlu.zhihu.util;
 
 import org.slf4j.LoggerFactory;
 
-import java.math.BigInteger;
-import java.security.MessageDigest;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
-public class Encoder {
+public class FileUtil {
 
-    private Encoder() {
-        throw new AssertionError("no com.jlu.zhihu.util.Encoder for you!");
+    public static void write2File(String content, String path) {
+        try {
+            FileWriter writer = new FileWriter(new File(path));
+            writer.write(content);
+            writer.close();
+        } catch (IOException e) {
+            LoggerFactory.getLogger(FileUtil.class).error("write to file exception.", e);
+        }
     }
 
-    public static String md5(String str) {
-        try {
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            md.update(str.getBytes());
-            return new BigInteger(1, md.digest()).toString(16);
-        } catch (Exception e) {
-            LoggerFactory.getLogger(FileUtil.class).error("encrypt to md5 exception.", e);
+    public static void deleteFile(String path) {
+        File file = new File(path);
+        if (!file.delete()) {
+            throw new RuntimeException("delete file failed! path: " + path);
         }
-        return str;
     }
 }

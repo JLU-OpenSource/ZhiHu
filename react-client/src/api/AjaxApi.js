@@ -1,8 +1,8 @@
 import moment from "moment";
 
-const host = 'http://127.0.0.1:8080';
-
 const AjaxApi = {
+
+  host: "http://127.0.0.1:8080",
 
   body: function (body, args) {
     return {
@@ -14,7 +14,7 @@ const AjaxApi = {
   },
 
   post: function (url, data) {
-    return fetch(host + url, {
+    return fetch(this.host + url, {
       body: JSON.stringify(data),
       headers: {
         'token': sessionStorage.getItem('token'),

@@ -20,6 +20,8 @@ import com.jlu.zhihu.model.Draft;
 import com.jlu.zhihu.model.User;
 import com.jlu.zhihu.repository.DraftRepository;
 import com.jlu.zhihu.service.DraftService;
+import com.jlu.zhihu.util.FileUtil;
+import com.jlu.zhihu.util.RawUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,15 +43,17 @@ public class DraftServiceImpl implements DraftService {
     }
 
     @Override
-    public Draft saveDraft(Draft draft, String html,String raw) {
-        System.out.println(html);
-        System.out.println(raw);
-        return draftRepository.save(draft);
+    public Draft saveDraft(Draft draft, String html, String raw) {
+        draft.summary = RawUtil.getSummaryByRaw(raw, SUMMARY_LENGTH);
+        draft = draftRepository.save(draft);
+        FileUtil.write2File(html, DRAFT_PATH + draft.id + ".html");
+        return draft;
     }
 
     @Override
     public Draft removeDraft(Draft draft) {
         draftRepository.delete(draft);
+        FileUtil.deleteFile(DRAFT_PATH + draft.id + ".html");
         return draft;
     }
 }

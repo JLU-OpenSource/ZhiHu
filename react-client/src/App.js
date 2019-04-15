@@ -13,6 +13,7 @@ import Collects from './componet/Collects.js';
 
 import './App.css';
 import UserApi from './api/UserApi.js';
+import Drafts from './componet/Drafts.js';
 
 
 const { Content, Footer, Sider } = Layout;
@@ -52,7 +53,16 @@ class App extends React.Component {
               editorOptions: {
                 type: 'article', body: {}
               }
-            }); break;
+            });
+          break;
+        case 'drafts':
+          if (this.state.currentUser == null) {
+            this.setState({ loginFormVisible: true, });
+          } else this.setState({
+            content: e.key,
+            tab: e.key
+          });
+          break;
         default: this.setState({
           content: e.key,
           tab: e.key
@@ -87,6 +97,16 @@ class App extends React.Component {
     })
   }
 
+  handleDraftRestore = (draft) => {
+    this.setState({
+      content: 'editor',
+      tab: 'editor',
+      editorOptions: {
+        type: 'draft', body: draft
+      }
+    });
+  }
+
   getContent = () => {
     switch (this.state.content) {
       case 'recommend': return <Recommends fullAnswerClick={this.handleFullAnswerClick} />;
@@ -99,6 +119,7 @@ class App extends React.Component {
       case 'editor': return <Editor options={this.state.editorOptions} />;
       case 'idea': return <Comments />;
       case 'collection': return <Collects />;
+      case 'drafts': return <Drafts restoreDraft={this.handleDraftRestore} />
       default: return <Empty style={{ marginTop: '200px' }} />;
     }
   }
@@ -125,7 +146,7 @@ class App extends React.Component {
                   </SubMenu>
                   <Menu.Item key="editor"><Icon type="edit" />编辑器</Menu.Item>
                   <Menu.Item key="collection"><span><Icon type="tags" />收藏夹</span></Menu.Item>
-                  <Menu.Item key="draft"><span><Icon type="file" />草稿箱</span></Menu.Item>
+                  <Menu.Item key="drafts"><span><Icon type="file" />草稿箱</span></Menu.Item>
                   <Menu.Item key="about"><span><Icon type="info-circle" />关于本站</span></Menu.Item>
                   <Menu.Item key="copyright"><span><Icon type="copyright" />版权所有</span></Menu.Item>
                 </Menu>

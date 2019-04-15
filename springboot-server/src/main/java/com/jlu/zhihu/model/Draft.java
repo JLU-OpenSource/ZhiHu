@@ -30,7 +30,7 @@ public class Draft {
 
     @OneToOne
     public User author;
-    
+
     public String summary;
 
     public long st = System.currentTimeMillis();
