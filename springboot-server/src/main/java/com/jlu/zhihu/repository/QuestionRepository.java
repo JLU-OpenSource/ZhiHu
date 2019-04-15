@@ -14,35 +14,13 @@
  *    limitations under the License.
  */
 
-package com.jlu.zhihu.model;
+package com.jlu.zhihu.repository;
 
-import javax.persistence.*;
-import java.util.List;
-import java.util.Set;
+import com.jlu.zhihu.model.Question;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-@Entity
-public class Question {
+@Repository
+public interface QuestionRepository extends JpaRepository<Question, Integer> {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public int id;
-
-    @Column(nullable = false, length = 50)
-    public String title;
-
-    @OneToOne
-    public User author;
-
-    public String summary;
-
-    @OneToMany(fetch = FetchType.EAGER)
-    public Set<User> agree;
-
-    @OneToMany(fetch = FetchType.EAGER)
-    public Set<User> collect;
-
-    @OneToMany(fetch = FetchType.EAGER)
-    public List<Comment> comment;
-
-    public long st = System.currentTimeMillis();
 }

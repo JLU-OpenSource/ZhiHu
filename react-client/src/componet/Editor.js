@@ -63,6 +63,13 @@ class Editor extends React.Component {
         description: '您正在为问题 "' + this.state.options.body.title + '" 撰写答案，按下 Control+S 或 Cmd+S 保存，或点击右上角发布按钮发布答案。',
         duration: 8,
       });
+    } else {
+      notification['info']({
+        key: 'tips',
+        message: '正在恢复草稿',
+        description: '继续编写 "' + this.state.options.body.title + '" ，按下 Control+S 或 Cmd+S 保存，或点击右上角发布按钮发布内容。',
+        duration: 8,
+      });
     }
     if (this.state.options.body != null) {
       switch (this.state.options.type) {
