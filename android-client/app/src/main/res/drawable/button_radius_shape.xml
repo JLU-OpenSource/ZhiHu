@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <!--
   ~    Copyright [2019] [chengjie.jlu@qq.com]
   ~
@@ -15,12 +16,12 @@
   ~    limitations under the License.
   -->
 
-<resources>
-    <color name="color_action_bar">#FFFFFF</color>
-    <color name="color_status_bar">@color/color_action_bar</color>
-    <color name="color_normal_button">#1296db</color>
-    <color name="color_search_box_background">#F0F0F0</color>
-    <color name="color_black">#000000</color>
-    <color name="color_dark_grey">#3C3C3C</color>
-    <color name="color_list_item_content">#4D4D4D</color>
-</resources>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <solid android:color="@color/color_normal_button" />
+
+    <corners android:topLeftRadius="5dp"
+        android:topRightRadius="5dp"
+        android:bottomRightRadius="5dp"
+        android:bottomLeftRadius="5dp"/>
+</shape>

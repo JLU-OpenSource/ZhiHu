@@ -23,19 +23,36 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.jlu.zhihu.R;
 
+import br.com.simplepass.loading_button_lib.customViews.CircularProgressButton;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 public class UserFragment extends Fragment implements ScrollToHeadListener {
+
+    @BindView(R.id.ok)
+    CircularProgressButton loginButton;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_user, container, false);
+        View view = inflater.inflate(R.layout.fragment_user, container, false);
+        ButterKnife.bind(this, view);
+        return view;
     }
 
     @Override
     public void onScrollToHead() {
 
+    }
+
+    @OnClick(R.id.ok)
+    public void login() {
+        Toast.makeText(getContext(),"click",Toast.LENGTH_LONG).show();
+        loginButton.startAnimation();
     }
 }

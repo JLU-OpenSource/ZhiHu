@@ -17,6 +17,12 @@
 <resources>
     <string name="app_name">知乎</string>
     <string name="search_in_zhihu">搜索知乎内容</string>
+    <string name="slogan">发现更大的世界</string>
+    <string name="login">登陆</string>
+    <string name="auto_register">未注册账号自动注册</string>
+    <string name="email_address">邮件地址</string>
+    <string name="input_password">输入密码</string>
+    <string name="input_name">输入昵称</string>
 
     <string name="tab_home">首页</string>
     <string name="tab_question">问题</string>
