@@ -41,6 +41,8 @@ public class User {
 
     public String site = "http://47.94.134.55:3000/";
 
+    public String sign = "发现更大的世界";
+
     @Override
     public String toString() {
         return JSONObject.toJSONString(this);

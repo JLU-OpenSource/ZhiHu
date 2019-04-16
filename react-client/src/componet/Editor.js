@@ -1,4 +1,5 @@
 import React from 'react'
+import moment from "moment";
 import BraftEditor from 'braft-editor'
 import { notification, Typography, Modal, Radio, Input, Form, message } from "antd";
 import Table from 'braft-extensions/dist/table'
@@ -83,16 +84,17 @@ class Editor extends React.Component {
     }
   }
 
-  async componentWillUnmount() {
-  }
-
   handleEditorChange = (editorState) => {
     this.setState({ editorState })
   }
 
   submitContent = async () => {
-    const htmlContent = this.state.editorState.toHTML();
-    console.log(htmlContent);
+    this.setState({
+      contentType: 'draft',
+      contentTitle: '未命名 ' + moment().format('YYYY-MM-DD HH:mm:ss')
+    }, () => {
+      this.handleSubmit();
+    })
   }
 
   submitToServer = () => {
@@ -103,18 +105,28 @@ class Editor extends React.Component {
     if (this.state.contentTitle.length === 0 || this.state.contentTitle.trim().length === 0)
       message.error("标题不能为空");
     else {
-      if (this.state.contentType === 'draft') {
-        this.setState({ confirmLoading: true })
-        const rawString = this.state.editorState.toRAW()
-        const htmlString = this.state.editorState.toHTML()
+      const rawString = this.state.editorState.toRAW()
+      const htmlString = this.state.editorState.toHTML()
+      const _this = this;
+      _this.setState({ confirmLoading: true })
+      if (_this.state.contentType === 'draft') {
         const drfat = {
-          'title': this.state.contentTitle,
+          'title': _this.state.contentTitle,
           'author': JSON.parse(sessionStorage.getItem('user'))
         }
-        const _this = this;
         EditorApi.saveDraft(drfat, htmlString, rawString, function callback(response) {
           _this.setState({ confirmLoading: false, modalVisible: false, saved: true })
           message.success(' "' + response.title + '" 已经保存');
+        })
+      } else if (_this.state.contentType === 'question') {
+        const question = {
+          'title': _this.state.contentTitle,
+          'author': JSON.parse(sessionStorage.getItem('user'))
+        }
+        EditorApi.createQuestion(question, htmlString, rawString, function callback(response) {
+          _this.setState({ confirmLoading: false, modalVisible: false, saved: true })
+          message.success('问题已发布');
+          _this.props.onSubmitQuestion();
         })
       }
     }

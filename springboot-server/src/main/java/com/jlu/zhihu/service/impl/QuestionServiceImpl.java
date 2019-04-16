@@ -19,6 +19,8 @@ package com.jlu.zhihu.service.impl;
 import com.jlu.zhihu.model.Question;
 import com.jlu.zhihu.repository.QuestionRepository;
 import com.jlu.zhihu.service.QuestionService;
+import com.jlu.zhihu.util.FileUtil;
+import com.jlu.zhihu.util.RawUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -36,12 +38,20 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public Question createQuestion(Question question) {
+    public Question createQuestion(Question question, String html, String raw) {
+        question.summary = RawUtil.getSummaryByRaw(raw, SUMMARY_LENGTH);
+        question = questionRepository.save(question);
+        FileUtil.write2File(html, QUESTION_PATH + question.id + ".html");
         return questionRepository.save(question);
     }
 
     @Override
     public List<Question> findAll(Pageable pageable) {
         return questionRepository.findAll(pageable).getContent();
+    }
+
+    @Override
+    public Question findById(int id) {
+        return questionRepository.findById(id);
     }
 }

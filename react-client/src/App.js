@@ -116,7 +116,8 @@ class App extends React.Component {
         createAnswerClick={this.handleCreateAnswerClick}
         allAnswerClick={this.handleAllAnswerClick} />;
       case 'article': return <Article />
-      case 'editor': return <Editor options={this.state.editorOptions} />;
+      case 'editor': return <Editor options={this.state.editorOptions}
+        onSubmitQuestion={() => this.setState({ content: 'question', tab: 'question' })} />;
       case 'idea': return <Comments />;
       case 'collection': return <Collects />;
       case 'drafts': return <Drafts restoreDraft={this.handleDraftRestore} />
