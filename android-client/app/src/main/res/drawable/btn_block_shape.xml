@@ -14,15 +14,7 @@
   ~    See the License for the specific language governing permissions and
   ~    limitations under the License.
   -->
-
-<resources>
-    <color name="color_action_bar">#FFFFFF</color>
-    <color name="color_status_bar">@color/color_action_bar</color>
-    <color name="color_normal_button">#1296db</color>
-    <color name="color_search_box_background">#F0F0F0</color>
-    <color name="color_black">#000000</color>
-    <color name="color_dark_grey">#3C3C3C</color>
-    <color name="color_light_grey">#E0E0E0</color>
-    <color name="color_list_item_content">#4D4D4D</color>
-    <color name="color_red">#FA0000</color>
-</resources>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <corners android:radius="5dp"/>
+    <solid android:color="@color/color_normal_button"/>
+</shape>

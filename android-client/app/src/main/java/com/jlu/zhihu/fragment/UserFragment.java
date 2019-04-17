@@ -62,9 +62,4 @@ public class UserFragment extends Fragment implements ScrollToHeadListener {
     public void onScrollToHead() {
 
     }
-
-    @OnClick(R.id.user_panel)
-    public void login() {
-        loginDialog.show();
-    }
 }

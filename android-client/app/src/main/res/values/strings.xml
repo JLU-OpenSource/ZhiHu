@@ -18,7 +18,7 @@
     <string name="app_name">知乎</string>
     <string name="search_in_zhihu">搜索知乎内容</string>
     <string name="slogan">发现更大的世界</string>
-    <string name="login">登陆知乎</string>
+    <string name="login">快捷登陆</string>
     <string name="login_more">登陆知乎发现更多内容</string>
     <string name="auto_register">未注册账号自动注册</string>
     <string name="email_address">邮件地址</string>
@@ -31,7 +31,43 @@
     <string name="tab_idea">想法</string>
     <string name="tab_my">我的</string>
 
+    <string name="more">更多</string>
+
+    <string name="switch_image">更换头像</string>
+    <string name="sign">个性签名</string>
+    <string name="logout">退出登陆</string>
+
     <string name="about_zhihu">关于知乎</string>
     <string name="support">帮助支持</string>
+    <string name="social_login">社交账号登陆</string>
+    <string name="login_agree">登陆代表您同意</string>
+    <string name="deal">用户协议</string>
+    <string name="and">与</string>
+    <string name="policy">隐私政策</string>
+    <string name="liu_kan_shan">知乎刘看山</string>
+    <string name="fans">粉丝 25</string>
+    <string name="follow">关注 25</string>
+    <string name="agree">赞同 215</string>
+    <string name="collect">收藏 25</string>
+    <string name="answers">我的回答</string>
+    <string name="question">我的提问</string>
+    <string name="articles">我的文章</string>
+    <string name="accounts">账号与安全</string>
+    <string name="name">昵称</string>
+    <string name="phone">手机号码</string>
+    <string name="email">邮箱</string>
+    <string name="modify_pwd">修改账号密码</string>
+    <string name="social_accounts_bind">社交账号绑定</string>
+    <string name="qq">QQ账号</string>
+    <string name="qq_name">医我一生</string>
+    <string name="wechat">微信账号</string>
+    <string name="un_bind">未绑定</string>
+    <string name="weibo">新浪微博</string>
+    <string name="notify">消息与通知</string>
+    <string name="news">热点资讯</string>
+    <string name="agree_and_collect">点赞与收藏</string>
+    <string name="comment_and_reply">评论与回复</string>
+    <string name="follow_people">关注人动态</string>
     <string name="check_update">检查更新</string>
+    <string name="copyright">©Copyright chengjie.jlu@qq.com</string>
 </resources>
