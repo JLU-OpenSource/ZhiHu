@@ -16,26 +16,24 @@
 
 package com.jlu.zhihu.fragment;
 
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import com.jlu.zhihu.view.ListItemModel;
 
-import com.jlu.zhihu.R;
+import java.util.List;
 
-public class ArticleFragment extends Fragment implements ScrollToHeadListener {
+public class ArticleFragment extends BaseListFragment {
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_article, container, false);
+    void onInit(List<ListItemModel> data) {
+
     }
 
     @Override
-    public void onScrollToHead() {
+    void onLoadMore(List<ListItemModel> data) {
+
+    }
+
+    @Override
+    void onRefresh(List<ListItemModel> data) {
 
     }
 }

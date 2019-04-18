@@ -17,17 +17,21 @@
 package com.jlu.zhihu.util;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.widget.Toast;
 
 import com.jlu.zhihu.ZApplication;
 
 public class ToastUtil {
 
+    private static Handler handler = new Handler(Looper.getMainLooper());
+
     private static Context getContext() {
         return ZApplication.getContextHolder();
     }
 
     public static void msg(String msg) {
-        Toast.makeText(getContext(), msg, Toast.LENGTH_LONG).show();
+        handler.post(() -> Toast.makeText(getContext(), msg, Toast.LENGTH_LONG).show());
     }
 }

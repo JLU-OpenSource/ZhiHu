@@ -71,8 +71,8 @@ public class LoginActivity extends AppCompatActivity implements UserService.Logi
         User user = new User();
         user.email = editTextEmail.getText().toString();
         user.password = editTextPassword.getText().toString();
-        boolean login = editTextName.getVisibility() == View.VISIBLE;
-        if (login) user.name = editTextName.getText().toString();
+        boolean login = editTextName.getVisibility() == View.GONE;
+        if (!login) user.name = editTextName.getText().toString();
         LogUtil.d(TAG, "start login user: " + user.toString());
         userService.go(user, login);
         loginButton.startAnimation();
@@ -87,8 +87,8 @@ public class LoginActivity extends AppCompatActivity implements UserService.Logi
                 : AnimationUtils.makeOutAnimation(this, true);
         editTextName.startAnimation(animation);
         editTextName.setVisibility(login ? View.VISIBLE : View.GONE);
-        textViewRegister.setText(login ? "注册知乎账号" : "返回登陆");
-        loginButton.setText(login ? "登陆" : "注册");
+        textViewRegister.setText(login ? "返回登陆" : "注册知乎账号");
+        loginButton.setText(login ? "注册" : "登陆");
     }
 
     @Override

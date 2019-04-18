@@ -14,27 +14,12 @@
  *    limitations under the License.
  */
 
-package com.jlu.zhihu.fragment;
+package com.jlu.zhihu.view;
 
+import android.view.View;
 
-import com.jlu.zhihu.view.ListItemModel;
+public interface ListItemView extends View.OnClickListener {
 
-import java.util.List;
+    void onBind(ListItemModel item);
 
-public class QuestionFragment extends BaseListFragment {
-
-    @Override
-    void onInit(List<ListItemModel> data) {
-
-    }
-
-    @Override
-    void onLoadMore(List<ListItemModel> data) {
-
-    }
-
-    @Override
-    void onRefresh(List<ListItemModel> data) {
-
-    }
 }

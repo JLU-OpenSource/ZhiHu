@@ -26,7 +26,7 @@ public interface BaseService {
 
     int OK = 200;
 
-    String HOST = "http://192.168.137.159:8080";
+    String HOST = "http://47.94.134.55:8080";
 
     Type TYPE_RESPONSE_STRING = new TypeToken<Response<String>>() {}.getType();
 

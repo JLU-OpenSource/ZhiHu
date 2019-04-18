@@ -37,6 +37,5 @@ dependencies {
     implementation 'br.com.simplepass:loading-button-android:1.14.0'
 
     implementation 'com.google.code.gson:gson:2.8.5'
-    implementation 'com.alibaba:fastjson:1.1.70.android'
     implementation 'com.squareup.okhttp3:okhttp:3.12.0'
 }

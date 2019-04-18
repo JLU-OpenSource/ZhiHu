@@ -14,27 +14,9 @@
  *    limitations under the License.
  */
 
-package com.jlu.zhihu.fragment;
+package com.jlu.zhihu.event;
 
+public interface EventHandler {
 
-import com.jlu.zhihu.view.ListItemModel;
-
-import java.util.List;
-
-public class QuestionFragment extends BaseListFragment {
-
-    @Override
-    void onInit(List<ListItemModel> data) {
-
-    }
-
-    @Override
-    void onLoadMore(List<ListItemModel> data) {
-
-    }
-
-    @Override
-    void onRefresh(List<ListItemModel> data) {
-
-    }
+    boolean handleMsg(int what, String msg, Object o);
 }
