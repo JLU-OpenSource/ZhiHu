@@ -16,23 +16,19 @@
 
 package com.jlu.zhihu.api.service;
 
+import com.google.gson.reflect.TypeToken;
 import com.jlu.zhihu.model.User;
+import com.jlu.zhihu.net.Response;
 
-public interface UserService extends BaseService {
+import java.lang.reflect.Type;
 
-    String PATH_LOGIN = "/user/login";
-    String PATH_REGISTER = "/user/register";
-    String PATH_FIND_EMAIL = "/user/api/email";
+public interface BaseService {
 
-    interface LoginCallback {
-        void loginFinish(boolean success);
-    }
+    int OK = 200;
 
-    void go(User user,boolean login);
+    String HOST = "http://192.168.137.159:8080";
 
-    void setLoginCallback(LoginCallback loginCallback);
+    Type TYPE_RESPONSE_STRING = new TypeToken<Response<String>>() {}.getType();
 
-    User getLoginUser();
-
-    String getToken();
+    Type TYPE_RESPONSE_USER = new TypeToken<Response<User>>() {}.getType();
 }

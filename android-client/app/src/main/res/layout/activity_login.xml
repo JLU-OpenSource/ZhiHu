@@ -17,6 +17,7 @@
   -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -46,6 +47,7 @@
             android:id="@+id/email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
             android:hint="@string/email_address"
             android:inputType="textEmailAddress"
             android:theme="@style/edit_text"
@@ -63,44 +65,35 @@
             android:theme="@style/edit_text"
             tools:ignore="Autofill" />
 
-        <Button
+        <EditText
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:hint="@string/input_name"
+            android:inputType="text"
+            android:theme="@style/edit_text"
+            android:visibility="gone"
+            tools:ignore="Autofill" />
+
+        <br.com.simplepass.loading_button_lib.customViews.CircularProgressButton
             android:id="@+id/ok"
             style="@style/btn_block"
-            android:layout_marginTop="30dp"
-            android:text="@string/login" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:layout_marginTop="30dp"
+            android:text="@string/login"
+            app:spinning_bar_color="@color/color_action_bar"
+            app:spinning_bar_padding="5dp" />
+
+        <TextView
+            android:id="@+id/register"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/login_agree" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:text="@string/deal"
-                android:textColor="@color/color_normal_button" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:text="@string/and" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:text="@string/policy"
-                android:textColor="@color/color_normal_button" />
-        </LinearLayout>
+            android:text="@string/register"
+            android:textAlignment="center"
+            android:textColor="@color/color_normal_button"
+            android:textSize="18sp" />
     </LinearLayout>
 
     <TextView

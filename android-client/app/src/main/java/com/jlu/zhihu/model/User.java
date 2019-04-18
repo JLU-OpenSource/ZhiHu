@@ -14,9 +14,41 @@
  *    limitations under the License.
  */
 
-package com.jlu.zhihu.api.service.impl;
+package com.jlu.zhihu.model;
 
-import com.jlu.zhihu.api.service.UserService;
+import com.google.gson.Gson;
 
-public class UserServiceImpl implements UserService {
+public class User {
+
+    public int id;
+
+    public String email;
+
+    public String password;
+
+    public String name;
+
+    public String avatar;
+
+    public String site;
+
+    public String sign;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        return id == ((User) o).id;
+    }
+
+    @Override
+    public int hashCode() {
+        return id;
+    }
+
+    @Override
+    public String toString() {
+        return new Gson().toJson(this);
+    }
 }

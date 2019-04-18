@@ -19,18 +19,87 @@ package com.jlu.zhihu.activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import com.jlu.zhihu.R;
+import com.jlu.zhihu.api.UserApi;
+import com.jlu.zhihu.api.service.UserService;
+import com.jlu.zhihu.model.User;
+import com.jlu.zhihu.util.LogUtil;
+import com.jlu.zhihu.util.ToastUtil;
 
-public class LoginActivity extends AppCompatActivity {
+import br.com.simplepass.loading_button_lib.customViews.CircularProgressButton;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
+public class LoginActivity extends AppCompatActivity implements UserService.LoginCallback {
+
+    private static final String TAG = "LoginActivity";
+
+    private final UserService userService = UserApi.getService();
+
+    @BindView(R.id.name)
+    EditText editTextName;
+
+    @BindView(R.id.email)
+    EditText editTextEmail;
+
+    @BindView(R.id.password)
+    EditText editTextPassword;
+
+    @BindView(R.id.register)
+    TextView textViewRegister;
+
+    @BindView(R.id.ok)
+    CircularProgressButton loginButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        ButterKnife.bind(this);
+        userService.setLoginCallback(this);
+    }
 
-        findViewById(R.id.ok).setOnClickListener(v -> {
-            startActivity(new Intent(this, MainActivity.class));
+    @OnClick(R.id.ok)
+    public void login() {
+        User user = new User();
+        user.email = editTextEmail.getText().toString();
+        user.password = editTextPassword.getText().toString();
+        boolean login = editTextName.getVisibility() == View.VISIBLE;
+        if (login) user.name = editTextName.getText().toString();
+        LogUtil.d(TAG, "start login user: " + user.toString());
+        userService.go(user, login);
+        loginButton.startAnimation();
+        textViewRegister.setEnabled(false);
+    }
+
+    @OnClick(R.id.register)
+    public void switchLogin() {
+        boolean login = editTextName.getVisibility() == View.GONE;
+
+        Animation animation = login ? AnimationUtils.makeInAnimation(this, true)
+                : AnimationUtils.makeOutAnimation(this, true);
+        editTextName.startAnimation(animation);
+        editTextName.setVisibility(login ? View.VISIBLE : View.GONE);
+        textViewRegister.setText(login ? "注册知乎账号" : "返回登陆");
+        loginButton.setText(login ? "登陆" : "注册");
+    }
+
+    @Override
+    public void loginFinish(boolean success) {
+        runOnUiThread(() -> {
+            loginButton.revertAnimation();
+            textViewRegister.setEnabled(true);
+            if (!success)
+                ToastUtil.msg("登陆失败，用户名或密码错误");
+            else
+                startActivity(new Intent(this, MainActivity.class));
         });
     }
 }

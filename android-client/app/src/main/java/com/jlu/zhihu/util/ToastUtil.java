@@ -14,25 +14,20 @@
  *    limitations under the License.
  */
 
-package com.jlu.zhihu.api.service;
+package com.jlu.zhihu.util;
 
-import com.jlu.zhihu.model.User;
+import android.content.Context;
+import android.widget.Toast;
 
-public interface UserService extends BaseService {
+import com.jlu.zhihu.ZApplication;
 
-    String PATH_LOGIN = "/user/login";
-    String PATH_REGISTER = "/user/register";
-    String PATH_FIND_EMAIL = "/user/api/email";
+public class ToastUtil {
 
-    interface LoginCallback {
-        void loginFinish(boolean success);
+    private static Context getContext() {
+        return ZApplication.getContextHolder();
     }
 
-    void go(User user,boolean login);
-
-    void setLoginCallback(LoginCallback loginCallback);
-
-    User getLoginUser();
-
-    String getToken();
+    public static void msg(String msg) {
+        Toast.makeText(getContext(), msg, Toast.LENGTH_LONG).show();
+    }
 }

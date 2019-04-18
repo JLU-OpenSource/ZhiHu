@@ -14,25 +14,21 @@
  *    limitations under the License.
  */
 
-package com.jlu.zhihu.api.service;
+package com.jlu.zhihu.net;
 
 import com.jlu.zhihu.model.User;
 
-public interface UserService extends BaseService {
+import java.text.DateFormat;
+import java.util.Date;
+import java.util.Map;
 
-    String PATH_LOGIN = "/user/login";
-    String PATH_REGISTER = "/user/register";
-    String PATH_FIND_EMAIL = "/user/api/email";
+public class Request<Body> {
 
-    interface LoginCallback {
-        void loginFinish(boolean success);
-    }
+    public User user;
 
-    void go(User user,boolean login);
+    public Body body;
 
-    void setLoginCallback(LoginCallback loginCallback);
+    public Map<String, String> args;
 
-    User getLoginUser();
-
-    String getToken();
+    public String time = DateFormat.getDateTimeInstance().format(new Date());
 }

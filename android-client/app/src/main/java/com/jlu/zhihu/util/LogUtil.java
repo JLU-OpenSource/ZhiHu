@@ -22,23 +22,33 @@ public class LogUtil {
 
     private static final String PREFIX = "ZhiHu-";
 
+    private static boolean LOG_ENABLE = true;
+
     private static String addPreFix(String tag) {
         return PREFIX + tag;
     }
 
     public static void d(String tag, String msg) {
-        Log.d(addPreFix(tag), msg);
+        if (LOG_ENABLE)
+            Log.d(addPreFix(tag), msg);
     }
 
     public static void d(String tag, String msg, Object... args) {
-        Log.d(addPreFix(tag), String.format(msg, args));
+        if (LOG_ENABLE)
+            Log.d(addPreFix(tag), String.format(msg, args));
     }
 
     public static void e(String tag, String msg, Throwable e) {
-        Log.e(addPreFix(tag), msg, e);
+        if (LOG_ENABLE)
+            Log.e(addPreFix(tag), msg, e);
     }
 
     public static void e(String tag, String msg, Throwable e, Object... args) {
-        Log.e(addPreFix(tag), String.format(msg, args), e);
+        if (LOG_ENABLE)
+            Log.e(addPreFix(tag), String.format(msg, args), e);
+    }
+
+    public static void setLogEnable(boolean logEnable) {
+        LOG_ENABLE = logEnable;
     }
 }

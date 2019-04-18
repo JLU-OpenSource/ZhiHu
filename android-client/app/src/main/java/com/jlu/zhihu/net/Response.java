@@ -14,25 +14,15 @@
  *    limitations under the License.
  */
 
-package com.jlu.zhihu.api.service;
+package com.jlu.zhihu.net;
 
-import com.jlu.zhihu.model.User;
+public class Response<Body> {
 
-public interface UserService extends BaseService {
+    public int status;
 
-    String PATH_LOGIN = "/user/login";
-    String PATH_REGISTER = "/user/register";
-    String PATH_FIND_EMAIL = "/user/api/email";
+    public Body body;
 
-    interface LoginCallback {
-        void loginFinish(boolean success);
-    }
+    public String msg;
 
-    void go(User user,boolean login);
-
-    void setLoginCallback(LoginCallback loginCallback);
-
-    User getLoginUser();
-
-    String getToken();
+    public String time;
 }
