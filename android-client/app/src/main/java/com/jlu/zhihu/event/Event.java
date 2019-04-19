@@ -14,13 +14,14 @@
  *    limitations under the License.
  */
 
-package com.jlu.zhihu.view;
+package com.jlu.zhihu.event;
 
-import com.jlu.zhihu.model.ListItemModel;
 
-public interface ListItemView {
+public interface Event {
 
-    void onBind(ListItemModel item);
+    interface Click {
 
-    void onItemClick();
+        /* Question Fragment */
+        int ON_QUESTION_CLICK = 0x11000001;
+    }
 }

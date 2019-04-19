@@ -30,6 +30,7 @@ import android.view.ViewGroup;
 import com.jlu.zhihu.R;
 import com.jlu.zhihu.adapter.RecyclerViewAdapter;
 import com.jlu.zhihu.api.service.ListService;
+import com.jlu.zhihu.event.Event;
 import com.jlu.zhihu.event.EventBus;
 import com.jlu.zhihu.event.EventHandler;
 import com.jlu.zhihu.util.LogUtil;
@@ -134,6 +135,11 @@ public class ListFragment extends Fragment implements
 
     @Override
     public boolean handleMsg(int what, String msg, Object o) {
+        if (Event.Click.ON_QUESTION_CLICK == what) {
+            LogUtil.d(TAG, "receive msg: " + msg);
+            LogUtil.d(TAG, o.toString());
+            return true;
+        }
         return false;
     }
 

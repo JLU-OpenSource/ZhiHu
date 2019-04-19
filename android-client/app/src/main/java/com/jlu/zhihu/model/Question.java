@@ -16,7 +16,11 @@
 
 package com.jlu.zhihu.model;
 
+import android.support.annotation.NonNull;
+
+import com.google.gson.Gson;
 import com.jlu.zhihu.R;
+
 
 import java.util.List;
 import java.util.Set;
@@ -42,5 +46,11 @@ public class Question implements ListItemModel {
     @Override
     public int getLayoutId() {
         return R.layout.list_item_question;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return new Gson().toJson(this);
     }
 }
