@@ -29,11 +29,11 @@ public class EventBus {
 
     private Handler handler;
 
-    private Set<EventHandler> iHandlers;
+    private Set<EventHandler> eventHandlers;
 
     private EventBus() {
         handler = new Handler(Looper.getMainLooper());
-        iHandlers = new HashSet<>();
+        eventHandlers = new HashSet<>();
     }
 
     public static EventBus getInstance() {
@@ -46,17 +46,17 @@ public class EventBus {
         return instance;
     }
 
-    public void registered(EventHandler iHandler) {
-        iHandlers.add(iHandler);
+    public void register(EventHandler eventHandler) {
+        eventHandlers.add(eventHandler);
     }
 
     @UiThread
     public void sendMessage(int what, Object o, String msg) {
-        for (EventHandler handler : iHandlers) {
+        for (EventHandler handler : eventHandlers) {
             if (handler.handleMsg(what, msg, o))
                 return;
         }
-        throw new IllegalArgumentException("no handler found to response this msg: " + msg);
+        throw new IllegalArgumentException("no handler found for msg: " + msg);
     }
 
     public void onMainThread(Runnable runnable) {

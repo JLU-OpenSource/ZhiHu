@@ -28,11 +28,9 @@ import android.widget.TextView;
 
 import com.jlu.zhihu.R;
 import com.jlu.zhihu.adapter.FragmentAdapter;
-import com.jlu.zhihu.fragment.AnswerFragment;
-import com.jlu.zhihu.fragment.ArticleFragment;
+import com.jlu.zhihu.api.QuestionApi;
+import com.jlu.zhihu.fragment.ListFragment;
 import com.jlu.zhihu.fragment.ScrollToHeadListener;
-import com.jlu.zhihu.fragment.IdeaFragment;
-import com.jlu.zhihu.fragment.QuestionFragment;
 import com.jlu.zhihu.fragment.UserFragment;
 import com.jlu.zhihu.util.LogUtil;
 
@@ -42,7 +40,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity {
+@SuppressWarnings("ConstantConditions")
+public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSelectedListener {
 
     private static final String TAG = "MainActivity";
 
@@ -63,10 +62,10 @@ public class MainActivity extends AppCompatActivity {
 
     private final List<Fragment> fragments = new ArrayList<Fragment>() {
         {
-            add(new AnswerFragment());
-            add(new QuestionFragment());
-            add(new ArticleFragment());
-            add(new IdeaFragment());
+            add(ListFragment.newInstance(QuestionApi.getInstance()));
+//            add(ListFragment.newInstance(QuestionApi.getInstance()));
+//            add(ListFragment.newInstance(QuestionApi.getInstance()));
+//            add(ListFragment.newInstance(QuestionApi.getInstance()));
             add(new UserFragment());
         }
     };
@@ -81,42 +80,13 @@ public class MainActivity extends AppCompatActivity {
         initFooterTab();
     }
 
-    @SuppressWarnings("ConstantConditions")
     private void initFooterTab() {
         for (int i = 0; i < footerBar.getTabCount(); i++) {
             footerBar.getTabAt(i).setCustomView(R.layout.view_footer_tab);
             ((TextView) footerBar.getTabAt(i).getCustomView().findViewById(R.id.tab_text)).setText(title[i]);
         }
 
-        footerBar.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                int position = tab.getPosition();
-                currentFragment = fragments.get(position);
-                Drawable drawable = getDrawable(active[position]);
-                ((ImageView) tab.getCustomView().findViewById(R.id.tab_icon)).setImageDrawable(drawable);
-                int color = getColor(R.color.color_normal_button);
-                ((TextView) tab.getCustomView().findViewById(R.id.tab_text)).setTextColor(color);
-                LogUtil.d(TAG, "onTabSelected: %d", position);
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-                int position = tab.getPosition();
-                Drawable drawable = getDrawable(normal[position]);
-                ((ImageView) tab.getCustomView().findViewById(R.id.tab_icon)).setImageDrawable(drawable);
-                int color = getColor(R.color.color_black);
-                ((TextView) tab.getCustomView().findViewById(R.id.tab_text)).setTextColor(color);
-                LogUtil.d(TAG, "onTabUnselected: %d", position);
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-                int position = tab.getPosition();
-                ((ScrollToHeadListener) currentFragment).onScrollToHead();
-                LogUtil.d(TAG, "onTabReselected: %d", position);
-            }
-        });
+        footerBar.addOnTabSelectedListener(this);
         for (int i = 1; i <= footerBar.getTabCount(); i++) {
             viewPager.setCurrentItem(i % footerBar.getTabCount());
         }
@@ -128,6 +98,34 @@ public class MainActivity extends AppCompatActivity {
         home.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         home.addCategory(Intent.CATEGORY_HOME);
         startActivity(home);
+    }
+
+    @Override
+    public void onTabSelected(TabLayout.Tab tab) {
+        int position = tab.getPosition();
+        currentFragment = fragments.get(position);
+        Drawable drawable = getDrawable(active[position]);
+        ((ImageView) tab.getCustomView().findViewById(R.id.tab_icon)).setImageDrawable(drawable);
+        int color = getColor(R.color.color_normal_button);
+        ((TextView) tab.getCustomView().findViewById(R.id.tab_text)).setTextColor(color);
+        LogUtil.d(TAG, "onTabSelected: %d", position);
+    }
+
+    @Override
+    public void onTabUnselected(TabLayout.Tab tab) {
+        int position = tab.getPosition();
+        Drawable drawable = getDrawable(normal[position]);
+        ((ImageView) tab.getCustomView().findViewById(R.id.tab_icon)).setImageDrawable(drawable);
+        int color = getColor(R.color.color_black);
+        ((TextView) tab.getCustomView().findViewById(R.id.tab_text)).setTextColor(color);
+        LogUtil.d(TAG, "onTabUnselected: %d", position);
+    }
+
+    @Override
+    public void onTabReselected(TabLayout.Tab tab) {
+        int position = tab.getPosition();
+        ((ScrollToHeadListener) currentFragment).onScrollToHead();
+        LogUtil.d(TAG, "onTabReselected: %d", position);
     }
 }
 

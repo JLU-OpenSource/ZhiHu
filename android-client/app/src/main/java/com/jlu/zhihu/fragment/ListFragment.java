@@ -28,15 +28,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.jlu.zhihu.R;
-import com.jlu.zhihu.adapter.BaseRecyclerViewAdapter;
+import com.jlu.zhihu.adapter.RecyclerViewAdapter;
+import com.jlu.zhihu.api.service.ListService;
 import com.jlu.zhihu.event.EventBus;
 import com.jlu.zhihu.event.EventHandler;
-import com.jlu.zhihu.util.TaskRunner;
-import com.jlu.zhihu.view.ListItemModel;
+import com.jlu.zhihu.util.LogUtil;
+import com.jlu.zhihu.model.ListItemModel;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.constant.RefreshState;
-import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
-import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +43,10 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public abstract class BaseListFragment extends Fragment implements ScrollToHeadListener, EventHandler {
+public class ListFragment extends Fragment implements
+        ScrollToHeadListener, EventHandler, ListService.ListCallback {
+
+    private static final String TAG = "ListFragment";
 
     @BindView(R.id.list)
     RecyclerView recyclerView;
@@ -57,29 +59,22 @@ public abstract class BaseListFragment extends Fragment implements ScrollToHeadL
 
     private View rootView;
 
-    private List<ListItemModel> list = new ArrayList<>();
+    private final List<ListItemModel> list = new ArrayList<>();
 
-    private BaseRecyclerViewAdapter adapter;
+    private ListService listService;
 
-    private EventBus eventBus = EventBus.getInstance();
+    private RecyclerViewAdapter adapter;
 
-    private OnRefreshListener refreshListener = refreshLayout ->
-            TaskRunner.execute(() -> {
-                list.clear();
-                onRefresh(list);
-                eventBus.onMainThread(() -> adapter.notifyDataSetChanged());
-                refreshLayout.finishRefresh();
-            });
+    private final EventBus eventBus = EventBus.getInstance();
 
-    private OnLoadMoreListener loadMoreListener = refreshLayout ->
-            TaskRunner.execute(() -> {
-                onLoadMore(list);
-                eventBus.onMainThread(() -> adapter.notifyItemInserted(list.size()));
-                refreshLayout.finishLoadMore();
-            });
+    public void setListService(ListService listService) {
+        this.listService = listService;
+    }
 
-    public BaseListFragment() {
-        eventBus.registered(this);
+    public static ListFragment newInstance(ListService listService) {
+        ListFragment fragment = new ListFragment();
+        fragment.setListService(listService);
+        return fragment;
     }
 
     @Override
@@ -95,24 +90,52 @@ public abstract class BaseListFragment extends Fragment implements ScrollToHeadL
         } else {
             rootView = inflater.inflate(R.layout.fragment_list, null);
             ButterKnife.bind(this, rootView);
-            adapter = new BaseRecyclerViewAdapter(getContext(), list);
+            adapter = new RecyclerViewAdapter(getContext(), list);
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             recyclerView.setAdapter(adapter);
-            refreshLayout.setOnRefreshListener(refreshListener);
-            refreshLayout.setOnLoadMoreListener(loadMoreListener);
-            TaskRunner.execute(() -> {
-                onInit(list);
-                eventBus.onMainThread(() -> adapter.notifyDataSetChanged());
-            });
+
+            refreshLayout.setOnRefreshListener(refreshLayout -> listService.refresh(refreshLayout));
+            refreshLayout.setOnLoadMoreListener(refreshLayout -> listService.loadMore(refreshLayout));
+
+            listService.setListCallback(this);
+            eventBus.register(this);
+            listService.init();
         }
         return rootView;
     }
 
-    abstract void onInit(List<ListItemModel> data);
+    @Override
+    public void onInit(List<ListItemModel> list) {
+        this.list.clear();
+        this.list.addAll(list);
+        eventBus.onMainThread(() -> adapter.notifyDataSetChanged());
+    }
 
-    abstract void onLoadMore(List<ListItemModel> data);
+    @Override
+    public void onRefresh(List<ListItemModel> list, RefreshLayout refreshLayout) {
+        LogUtil.d(TAG, "on list refresh, data size %d, service: %s", list.size(), listService.toString());
+        if (list.size() > 0) {
+            this.list.clear();
+            this.list.addAll(list);
+            eventBus.onMainThread(() -> adapter.notifyDataSetChanged());
+        }
+        eventBus.onMainThread(refreshLayout::finishRefresh);
+    }
 
-    abstract void onRefresh(List<ListItemModel> data);
+    @Override
+    public void onLoadMore(List<ListItemModel> list, RefreshLayout refreshLayout) {
+        LogUtil.d(TAG, "on list load more, data size %d, service: %s", list.size(), listService.toString());
+        if (list.size() > 0) {
+            this.list.addAll(list);
+            eventBus.onMainThread(() -> adapter.notifyItemInserted(this.list.size()));
+        }
+        eventBus.onMainThread(refreshLayout::finishLoadMore);
+    }
+
+    @Override
+    public boolean handleMsg(int what, String msg, Object o) {
+        return false;
+    }
 
     @Override
     public void onScrollToHead() {
@@ -121,10 +144,5 @@ public abstract class BaseListFragment extends Fragment implements ScrollToHeadL
         if (recyclerView.canScrollVertically(SCROLL_VERTICALLY_UP))
             recyclerView.scrollToPosition(0);
         else refreshLayout.autoRefresh();
-    }
-
-    @Override
-    public boolean handleMsg(int what, String msg, Object o) {
-        return false;
     }
 }

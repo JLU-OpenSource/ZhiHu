@@ -14,9 +14,13 @@
  *    limitations under the License.
  */
 
-package com.jlu.zhihu.view;
+package com.jlu.zhihu.model;
 
-public interface ListItemModel {
+public class Comment {
 
-    int getLayoutId();
+    public int id;
+
+    public String content;
+
+    public User author;
 }

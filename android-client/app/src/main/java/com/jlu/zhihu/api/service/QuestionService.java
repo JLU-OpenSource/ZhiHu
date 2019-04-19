@@ -14,26 +14,27 @@
  *    limitations under the License.
  */
 
-package com.jlu.zhihu.fragment;
+package com.jlu.zhihu.api.service;
 
-import com.jlu.zhihu.view.ListItemModel;
+import com.jlu.zhihu.model.Question;
 
-import java.util.List;
 
-public class ArticleFragment extends BaseListFragment {
+public interface QuestionService extends ListService {
 
-    @Override
-    void onInit(List<ListItemModel> data) {
+    String PATH_CREATE_QUESTION = HOST + "/api/question/create";
+    String PATH_ALL_QUESTION = HOST + "/api/question/all";
+    String PATH_QUESTION = HOST + "/api/question/";
 
+    interface QuestionCallback {
+
+        void onCreateQuestion(Question question);
+
+        void onLoadQuestionDetail(String html);
     }
 
-    @Override
-    void onLoadMore(List<ListItemModel> data) {
+    void createQuestion(Question question);
 
-    }
+    void loadQuestionDetail();
 
-    @Override
-    void onRefresh(List<ListItemModel> data) {
-
-    }
+    void setQuestionCallback(QuestionCallback callback);
 }

@@ -20,15 +20,15 @@ import com.jlu.zhihu.model.User;
 
 public interface UserService extends BaseService {
 
-    String PATH_LOGIN = "/user/login";
-    String PATH_REGISTER = "/user/register";
-    String PATH_FIND_EMAIL = "/user/api/email";
+    String PATH_LOGIN = HOST + "/user/login";
+    String PATH_REGISTER = HOST + "/user/register";
+    String PATH_FIND_EMAIL = HOST + "/user/api/email";
 
     interface LoginCallback {
         void loginFinish(boolean success);
     }
 
-    void go(User user,boolean login);
+    void go(User user, boolean login);
 
     void setLoginCallback(LoginCallback loginCallback);
 

@@ -54,10 +54,11 @@ public class QuestionController {
     }
 
     @PostMapping("/all")
-    public Response<List<Question>> all(@RequestBody Request<Integer> request) {
+    public Response<List<Question>> all(@RequestBody Request<Void> request) {
         Response<List<Question>> response = new Response<>();
         Sort sort = new Sort(Sort.Direction.DESC, "st");
-        Pageable pageable = PageRequest.of(request.body, questionService.PAGE_SIZE, sort);
+        Pageable pageable = PageRequest.of(Integer.valueOf(request.args.get("page"))
+                , Integer.valueOf(request.args.get("size")), sort);
         response.body = questionService.findAll(pageable);
         return response;
     }

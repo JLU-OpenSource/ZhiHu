@@ -27,8 +27,6 @@ public interface QuestionService {
 
     int SUMMARY_LENGTH = 250;
 
-    int PAGE_SIZE = 3;
-
     Question createQuestion(Question question, String html, String raw);
 
     List<Question> findAll(Pageable pageable);

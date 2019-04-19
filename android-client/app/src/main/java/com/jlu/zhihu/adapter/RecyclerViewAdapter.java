@@ -23,19 +23,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.jlu.zhihu.view.ListItemModel;
+import com.jlu.zhihu.model.ListItemModel;
 import com.jlu.zhihu.view.ListItemView;
 
 import java.util.List;
 
 
-public class BaseRecyclerViewAdapter extends RecyclerView.Adapter<BaseRecyclerViewAdapter.ViewHolder> {
+public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
     private List<ListItemModel> items;
 
     private LayoutInflater inflater;
 
-    public BaseRecyclerViewAdapter(Context context, List<ListItemModel> items) {
+    public RecyclerViewAdapter(Context context, List<ListItemModel> items) {
         this.items = items;
         this.inflater = LayoutInflater.from(context);
     }

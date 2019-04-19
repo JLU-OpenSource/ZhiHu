@@ -14,26 +14,33 @@
  *    limitations under the License.
  */
 
-package com.jlu.zhihu.fragment;
+package com.jlu.zhihu.model;
 
-import com.jlu.zhihu.view.ListItemModel;
+import com.jlu.zhihu.R;
 
 import java.util.List;
+import java.util.Set;
 
-public class AnswerFragment extends BaseListFragment {
+public class Question implements ListItemModel {
+
+    public int id;
+
+    public String title;
+
+    public User author;
+
+    public String summary;
+
+    public Set<User> agree;
+
+    public Set<User> collect;
+
+    public List<Comment> comment;
+
+    public long st = System.currentTimeMillis();
 
     @Override
-    void onInit(List<ListItemModel> data) {
-
-    }
-
-    @Override
-    void onLoadMore(List<ListItemModel> data) {
-
-    }
-
-    @Override
-    void onRefresh(List<ListItemModel> data) {
-
+    public int getLayoutId() {
+        return R.layout.list_item_question;
     }
 }

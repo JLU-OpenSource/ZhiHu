@@ -18,8 +18,9 @@ package com.jlu.zhihu.view;
 
 import android.view.View;
 
+import com.jlu.zhihu.model.ListItemModel;
+
 public interface ListItemView extends View.OnClickListener {
 
     void onBind(ListItemModel item);
-
 }

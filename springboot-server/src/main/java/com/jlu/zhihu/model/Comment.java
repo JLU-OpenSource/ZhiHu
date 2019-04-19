@@ -29,5 +29,5 @@ public class Comment {
     public String content;
     
     @OneToOne
-    public User user;
+    public User author;
 }

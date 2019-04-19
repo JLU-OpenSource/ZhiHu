@@ -14,27 +14,29 @@
  *    limitations under the License.
  */
 
-package com.jlu.zhihu.fragment;
+package com.jlu.zhihu.api.service;
 
-
-import com.jlu.zhihu.view.ListItemModel;
+import com.jlu.zhihu.model.ListItemModel;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
 
 import java.util.List;
 
-public class QuestionFragment extends BaseListFragment {
+public interface ListService extends BaseService {
 
-    @Override
-    void onInit(List<ListItemModel> data) {
+    interface ListCallback {
 
+        void onInit(List<ListItemModel> list);
+
+        void onRefresh(List<ListItemModel> list, RefreshLayout refreshLayout);
+
+        void onLoadMore(List<ListItemModel> list, RefreshLayout refreshLayout);
     }
 
-    @Override
-    void onLoadMore(List<ListItemModel> data) {
+    void init();
 
-    }
+    void refresh(RefreshLayout refreshLayout);
 
-    @Override
-    void onRefresh(List<ListItemModel> data) {
+    void loadMore(RefreshLayout refreshLayout);
 
-    }
+    void setListCallback(ListCallback callback);
 }

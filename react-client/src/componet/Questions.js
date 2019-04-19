@@ -18,7 +18,7 @@ class Questions extends React.Component {
 
   pullQuestion = () => {
     const _this = this;
-    QuestionApi.allQuestion(this.state.page - 1, function (questions) {
+    QuestionApi.allQuestion((this.state.page - 1) + "", function (questions) {
       const data = [];
       for (let i = 0; i < questions.length; i++) {
         data.push(

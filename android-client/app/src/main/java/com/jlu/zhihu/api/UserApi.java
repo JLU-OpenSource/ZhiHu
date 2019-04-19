@@ -67,8 +67,8 @@ public class UserApi implements UserService {
     private boolean generateToken(User user, boolean login) {
         Request<User> request = new Request<>();
         request.body = user;
-        Response<String> response = OkHttpHelper.post(HOST +
-                (login ? PATH_LOGIN : PATH_REGISTER), request, TYPE_RESPONSE_STRING);
+        Response<String> response = OkHttpHelper.post(
+                login ? PATH_LOGIN : PATH_REGISTER, request, TYPE_RESPONSE_STRING);
         if (response != null && response.status == OK) {
             this.token = response.body;
         }
