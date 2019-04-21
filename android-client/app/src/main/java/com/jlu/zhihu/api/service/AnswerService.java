@@ -14,24 +14,9 @@
  *    limitations under the License.
  */
 
-package com.jlu.zhihu.service;
+package com.jlu.zhihu.api.service;
 
-import com.jlu.zhihu.model.Question;
-import org.springframework.data.domain.Pageable;
+public interface AnswerService extends ListService{
 
-import java.util.List;
-
-public interface QuestionService {
-
-    int SUMMARY_LENGTH = 200;
-
-    Question createQuestion(Question question, String html, String raw);
-
-    List<Question> findAll(Pageable pageable);
-
-    Question findById(int id);
-
-    long countAll();
-
-    String getQuestionPath();
+    String PATH_ALL_ANSWER = HOST + "/api/answer/all";
 }

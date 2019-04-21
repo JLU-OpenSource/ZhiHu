@@ -14,24 +14,17 @@
  *    limitations under the License.
  */
 
-package com.jlu.zhihu.service;
+package com.jlu.zhihu.repository;
 
-import com.jlu.zhihu.model.Question;
-import org.springframework.data.domain.Pageable;
+import com.jlu.zhihu.model.Answer;
+import com.jlu.zhihu.model.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
+@Repository
+public interface AnswerRepository extends JpaRepository<Answer, Integer> {
 
-public interface QuestionService {
+    Answer findAnswerByAid(int id);
 
-    int SUMMARY_LENGTH = 200;
-
-    Question createQuestion(Question question, String html, String raw);
-
-    List<Question> findAll(Pageable pageable);
-
-    Question findById(int id);
-
-    long countAll();
-
-    String getQuestionPath();
+    Answer findByAuthorAndQid(User author,int qid);
 }

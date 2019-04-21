@@ -17,11 +17,18 @@
 package com.jlu.zhihu.api.service;
 
 import com.jlu.zhihu.model.ListItemModel;
+import com.jlu.zhihu.net.Request;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 
+import java.util.HashMap;
 import java.util.List;
 
 public interface ListService extends BaseService {
+
+    String PAGE_SIZE = "5";
+
+    String KEY_PAGE = "page";
+    String KEY_SIZE = "size";
 
     interface ListCallback {
 
@@ -39,4 +46,12 @@ public interface ListService extends BaseService {
     void loadMore(RefreshLayout refreshLayout);
 
     void setListCallback(ListCallback callback);
+
+    default Request<Void> listRequest(int page){
+        Request<Void> request = new Request<>();
+        request.args = new HashMap<>();
+        request.args.put(KEY_PAGE, page + "");
+        request.args.put(KEY_SIZE, PAGE_SIZE);
+        return request;
+    }
 }

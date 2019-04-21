@@ -16,8 +16,8 @@
 
 package com.jlu.zhihu.api;
 
-import com.jlu.zhihu.api.service.ListService;
-import com.jlu.zhihu.api.service.QuestionService;
+;
+import com.jlu.zhihu.api.service.AnswerService;
 import com.jlu.zhihu.model.Question;
 import com.jlu.zhihu.net.OkHttpHelper;
 import com.jlu.zhihu.net.Response;
@@ -27,36 +27,30 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-public class QuestionApi implements QuestionService {
+public class AnswerApi implements AnswerService {
 
-    private static QuestionService instance;
+    private static AnswerService instance;
 
     private int currentPage = 0;
 
-    private ListService.ListCallback listCallback;
+    private AnswerService.ListCallback listCallback;
 
-    private QuestionCallback singleCallback;
-
-    public static QuestionService getInstance() {
+    public static AnswerService getInstance() {
         if (instance == null) {
             synchronized (QuestionApi.class) {
                 if (instance == null)
-                    instance = new QuestionApi();
+                    instance = new AnswerApi();
             }
         }
         return instance;
     }
-
-    private QuestionApi() {
-    }
-
 
     @Override
     public void init() {
         TaskRunner.execute(() -> {
             currentPage = 0;
             Response<List<Question>> response = OkHttpHelper.post(
-                    PATH_ALL_QUESTION, listRequest(currentPage), TYPE_RESPONSE_LIST_QUESTION);
+                    PATH_ALL_ANSWER, listRequest(currentPage), TYPE_RESPONSE_LIST_ANSWER);
             if (response != null && response.status == OK)
                 listCallback.onInit(new ArrayList<>(response.body));
             else listCallback.onInit(new ArrayList<>(0));
@@ -68,7 +62,7 @@ public class QuestionApi implements QuestionService {
         TaskRunner.execute(() -> {
             currentPage = 0;
             Response<List<Question>> response = OkHttpHelper.post(
-                    PATH_ALL_QUESTION, listRequest(currentPage), TYPE_RESPONSE_LIST_QUESTION);
+                    PATH_ALL_ANSWER, listRequest(currentPage), TYPE_RESPONSE_LIST_ANSWER);
             if (response != null && response.status == OK)
                 listCallback.onRefresh(new ArrayList<>(response.body), refreshLayout);
             else listCallback.onRefresh(null, refreshLayout);
@@ -80,7 +74,7 @@ public class QuestionApi implements QuestionService {
         TaskRunner.execute(() -> {
             currentPage++;
             Response<List<Question>> response = OkHttpHelper.post(
-                    PATH_ALL_QUESTION, listRequest(currentPage), TYPE_RESPONSE_LIST_QUESTION);
+                    PATH_ALL_ANSWER, listRequest(currentPage), TYPE_RESPONSE_LIST_ANSWER);
             if (response != null && response.status == OK)
                 listCallback.onLoadMore(new ArrayList<>(response.body), refreshLayout);
             else listCallback.onLoadMore(null, refreshLayout);
@@ -90,18 +84,5 @@ public class QuestionApi implements QuestionService {
     @Override
     public void setListCallback(ListCallback callback) {
         this.listCallback = callback;
-    }
-
-    @Override
-    public void createQuestion(Question question) {
-    }
-
-    @Override
-    public void loadQuestionDetail() {
-    }
-
-    @Override
-    public void setQuestionCallback(QuestionCallback callback) {
-        this.singleCallback = callback;
     }
 }

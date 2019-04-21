@@ -23,6 +23,7 @@ import com.jlu.zhihu.service.DraftService;
 import com.jlu.zhihu.util.FileUtil;
 import com.jlu.zhihu.util.RawUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,9 +33,13 @@ public class DraftServiceImpl implements DraftService {
 
     private final DraftRepository draftRepository;
 
+    private final Environment environment;
+
     @Autowired
-    public DraftServiceImpl(DraftRepository draftRepository) {
+    public DraftServiceImpl(DraftRepository draftRepository,
+                            Environment environment) {
         this.draftRepository = draftRepository;
+        this.environment = environment;
     }
 
     @Override
@@ -46,14 +51,19 @@ public class DraftServiceImpl implements DraftService {
     public Draft saveDraft(Draft draft, String html, String raw) {
         draft.summary = RawUtil.getSummaryByRaw(raw, SUMMARY_LENGTH);
         draft = draftRepository.save(draft);
-        FileUtil.write2File(html, DRAFT_PATH + draft.id + ".html");
+        FileUtil.write2File(html, getDraftPath() + draft.id + ".html");
         return draft;
     }
 
     @Override
     public Draft removeDraft(Draft draft) {
         draftRepository.delete(draft);
-        FileUtil.deleteFile(DRAFT_PATH + draft.id + ".html");
+        FileUtil.deleteFile(getDraftPath() + draft.id + ".html");
         return draft;
+    }
+
+    @Override
+    public String getDraftPath() {
+        return environment.getProperty("static-resources-path") + "draft/";
     }
 }

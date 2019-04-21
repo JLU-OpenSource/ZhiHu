@@ -16,7 +16,7 @@
   ~    limitations under the License.
   -->
 
-<com.jlu.zhihu.view.ListItemQuestionView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.jlu.zhihu.view.ListItemAnswerView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -69,4 +69,24 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="7dp"
         android:textColor="@color/color_list_item_content" />
-</com.jlu.zhihu.view.ListItemQuestionView>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="7dp">
+
+        <TextView
+            android:id="@+id/info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:ignore="RelativeOverlap" />
+
+        <ImageView
+            android:id="@+id/icon_more"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/more"
+            tools:ignore="ContentDescription" />
+    </RelativeLayout>
+</com.jlu.zhihu.view.ListItemAnswerView>

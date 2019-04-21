@@ -26,9 +26,11 @@ class App extends React.Component {
     content: 'recommend',
     loginFormVisible: false,
     editorOptions: {
-      type: 'article', body: {}
+      type: 'question', body: {}
     },
     currentUser: null,
+    answer: null,
+    article: null
   }
 
   async componentDidMount() {
@@ -51,7 +53,7 @@ class App extends React.Component {
               content: 'editor',
               tab: 'editor',
               editorOptions: {
-                type: 'article', body: {}
+                type: 'question', body: {}
               }
             });
           break;
@@ -80,7 +82,7 @@ class App extends React.Component {
       content: 'editor',
       tab: 'editor',
       editorOptions: {
-        type: 'question', body: question
+        type: 'answer', body: question
       }
     })
   }
@@ -91,9 +93,10 @@ class App extends React.Component {
     })
   }
 
-  handleFullAnswerClick = (question) => {
+  handleFullAnswerClick = (answer) => {
     this.setState({
       content: 'answer',
+      answer: answer
     })
   }
 
@@ -110,14 +113,15 @@ class App extends React.Component {
   getContent = () => {
     switch (this.state.content) {
       case 'recommend': return <Recommends fullAnswerClick={this.handleFullAnswerClick} />;
-      case 'answer': return <Answer createAnswerClick={this.handleCreateAnswerClick} />;
+      case 'answer': return <Answer createAnswerClick={this.handleCreateAnswerClick} answer={this.state.answer} />;
       case 'answers': return <Answers fullAnswerClick={this.handleFullAnswerClick} />
       case 'question': return <Questions
         createAnswerClick={this.handleCreateAnswerClick}
         allAnswerClick={this.handleAllAnswerClick} />;
-      case 'article': return <Article />
+      case 'article': return <Article article={this.state.article} />
       case 'editor': return <Editor options={this.state.editorOptions}
-        onSubmitQuestion={() => this.setState({ content: 'question', tab: 'question' })} />;
+        onSubmitQuestion={() => this.setState({ content: 'question', tab: 'question' })}
+        onSubmitArticle={(article) => this.setState({ content: 'article', article: article, tab: 'article' })} />;
       case 'idea': return <Comments />;
       case 'collection': return <Collects />;
       case 'drafts': return <Drafts restoreDraft={this.handleDraftRestore} />

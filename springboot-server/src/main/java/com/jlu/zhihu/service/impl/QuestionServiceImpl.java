@@ -22,6 +22,7 @@ import com.jlu.zhihu.service.QuestionService;
 import com.jlu.zhihu.util.FileUtil;
 import com.jlu.zhihu.util.RawUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -31,17 +32,19 @@ import java.util.List;
 public class QuestionServiceImpl implements QuestionService {
 
     private final QuestionRepository questionRepository;
+    private final Environment environment;
 
     @Autowired
-    public QuestionServiceImpl(QuestionRepository questionRepository) {
+    public QuestionServiceImpl(QuestionRepository questionRepository, Environment environment) {
         this.questionRepository = questionRepository;
+        this.environment = environment;
     }
 
     @Override
     public Question createQuestion(Question question, String html, String raw) {
         question.summary = RawUtil.getSummaryByRaw(raw, SUMMARY_LENGTH);
         question = questionRepository.save(question);
-        FileUtil.write2File(html, QUESTION_PATH + question.id + ".html");
+        FileUtil.write2File(html, getQuestionPath() + question.id + ".html");
         return questionRepository.save(question);
     }
 
@@ -53,5 +56,15 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public Question findById(int id) {
         return questionRepository.findById(id);
+    }
+
+    @Override
+    public long countAll() {
+        return questionRepository.count();
+    }
+
+    @Override
+    public String getQuestionPath() {
+        return environment.getProperty("static-resources-path") + "question/";
     }
 }

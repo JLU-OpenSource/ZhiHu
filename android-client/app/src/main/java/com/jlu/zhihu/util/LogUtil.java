@@ -33,6 +33,11 @@ public class LogUtil {
             Log.d(addPreFix(tag), msg);
     }
 
+    public static void w(String tag, String msg) {
+        if (LOG_ENABLE)
+            Log.d(addPreFix(tag), msg);
+    }
+
     public static void d(String tag, String msg, Object... args) {
         if (LOG_ENABLE)
             Log.d(addPreFix(tag), String.format(msg, args));

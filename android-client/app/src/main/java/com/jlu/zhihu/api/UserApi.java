@@ -52,7 +52,7 @@ public class UserApi implements UserService {
             if (generateToken(user, login)) {
                 Request<String> request = new Request<>();
                 request.body = user.email;
-                Response<User> userResponse = OkHttpHelper.post(HOST + PATH_FIND_EMAIL, request, TYPE_RESPONSE_USER);
+                Response<User> userResponse = OkHttpHelper.post(PATH_FIND_EMAIL, request, TYPE_RESPONSE_USER);
                 if (userResponse.status == 200) {
                     userHolder = userResponse.body;
                     loginCallback.loginFinish(true);

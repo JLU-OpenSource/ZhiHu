@@ -35,6 +35,7 @@ import com.jlu.zhihu.event.EventBus;
 import com.jlu.zhihu.event.EventHandler;
 import com.jlu.zhihu.util.LogUtil;
 import com.jlu.zhihu.model.ListItemModel;
+import com.jlu.zhihu.util.ToastUtil;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.constant.RefreshState;
 
@@ -114,23 +115,39 @@ public class ListFragment extends Fragment implements
 
     @Override
     public void onRefresh(List<ListItemModel> list, RefreshLayout refreshLayout) {
-        LogUtil.d(TAG, "on list refresh, data size %d, service: %s", list.size(), listService.toString());
+        eventBus.onMainThread(refreshLayout::finishRefresh);
+        if (list != null)
+            LogUtil.d(TAG, "on list refresh, data size %d, service: %s",
+                    list.size(), listService.getClass().getSimpleName());
+        else {
+            ToastUtil.msg("刷新失败，请重试");
+            LogUtil.w(TAG, "refresh list failed.");
+            return;
+        }
         if (list.size() > 0) {
             this.list.clear();
             this.list.addAll(list);
             eventBus.onMainThread(() -> adapter.notifyDataSetChanged());
         }
-        eventBus.onMainThread(refreshLayout::finishRefresh);
     }
 
     @Override
     public void onLoadMore(List<ListItemModel> list, RefreshLayout refreshLayout) {
-        LogUtil.d(TAG, "on list load more, data size %d, service: %s", list.size(), listService.toString());
+        eventBus.onMainThread(refreshLayout::finishLoadMore);
+        if (list != null)
+            LogUtil.d(TAG, "on list load more, data size %d, service: %s",
+                    list.size(), listService.getClass().getSimpleName());
+        else {
+            ToastUtil.msg("加载失败，请重试");
+            LogUtil.w(TAG, "load more failed.");
+            return;
+        }
         if (list.size() > 0) {
             this.list.addAll(list);
             eventBus.onMainThread(() -> adapter.notifyItemInserted(this.list.size()));
+        } else {
+            ToastUtil.msg("没有更多数据了");
         }
-        eventBus.onMainThread(refreshLayout::finishLoadMore);
     }
 
     @Override

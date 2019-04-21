@@ -17,6 +17,7 @@
 package com.jlu.zhihu.api.service;
 
 import com.google.gson.reflect.TypeToken;
+import com.jlu.zhihu.model.Answer;
 import com.jlu.zhihu.model.Question;
 import com.jlu.zhihu.model.User;
 import com.jlu.zhihu.net.Response;
@@ -28,11 +29,13 @@ public interface BaseService {
 
     int OK = 200;
 
-    String HOST = "http://192.168.137.159:8080";
+    String HOST = "http://192.168.137.184:8080";
 
     Type TYPE_RESPONSE_STRING = new TypeToken<Response<String>>() {}.getType();
 
     Type TYPE_RESPONSE_USER = new TypeToken<Response<User>>() {}.getType();
 
     Type TYPE_RESPONSE_LIST_QUESTION = new TypeToken<Response<List<Question>>>() {}.getType();
+
+    Type TYPE_RESPONSE_LIST_ANSWER = new TypeToken<Response<List<Answer>>>() {}.getType();
 }

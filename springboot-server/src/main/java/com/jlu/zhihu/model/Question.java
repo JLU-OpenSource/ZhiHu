@@ -17,7 +17,6 @@
 package com.jlu.zhihu.model;
 
 import javax.persistence.*;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -36,13 +35,7 @@ public class Question {
     public String summary;
 
     @OneToMany(fetch = FetchType.EAGER)
-    public Set<User> agree;
-
-    @OneToMany(fetch = FetchType.EAGER)
-    public Set<User> collect;
-
-    @OneToMany(fetch = FetchType.EAGER)
-    public List<Comment> comment;
+    public Set<Answer> answers;
 
     public long st = System.currentTimeMillis();
 }

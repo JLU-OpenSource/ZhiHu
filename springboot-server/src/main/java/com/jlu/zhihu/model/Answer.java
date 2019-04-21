@@ -14,24 +14,37 @@
  *    limitations under the License.
  */
 
-package com.jlu.zhihu.service;
+package com.jlu.zhihu.model;
 
-import com.jlu.zhihu.model.Question;
-import org.springframework.data.domain.Pageable;
-
+import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
-public interface QuestionService {
+@Entity
+public class Answer {
 
-    int SUMMARY_LENGTH = 200;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    public int aid;
 
-    Question createQuestion(Question question, String html, String raw);
+    /* question id */
+    public int qid;
 
-    List<Question> findAll(Pageable pageable);
+    @OneToOne
+    public User author;
 
-    Question findById(int id);
+    public String title;
 
-    long countAll();
+    public String summary;
 
-    String getQuestionPath();
+    @OneToMany(fetch = FetchType.EAGER)
+    public Set<User> agree;
+
+    @OneToMany(fetch = FetchType.EAGER)
+    public Set<User> collect;
+
+    @OneToMany(fetch = FetchType.EAGER)
+    public List<Comment> comment;
+
+    public long st = System.currentTimeMillis();
 }

@@ -27,14 +27,16 @@ import com.bumptech.glide.Glide;
 import com.jlu.zhihu.R;
 import com.jlu.zhihu.event.Event;
 import com.jlu.zhihu.event.EventBus;
+import com.jlu.zhihu.model.Answer;
 import com.jlu.zhihu.model.ListItemModel;
-import com.jlu.zhihu.model.Question;
+
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class ListItemQuestionView extends LinearLayout implements ListItemView {
+public class ListItemAnswerView extends LinearLayout implements ListItemView {
 
     @BindView(R.id.title)
     TextView textViewTitle;
@@ -48,26 +50,35 @@ public class ListItemQuestionView extends LinearLayout implements ListItemView {
     @BindView(R.id.author_sign)
     TextView textViewAuthorSign;
 
+    @BindView(R.id.info)
+    TextView textViewInfo;
+
     @BindView(R.id.avatar)
     ImageView imageViewAvatar;
 
-    private Question question;
+    private Answer answer;
 
-    public ListItemQuestionView(Context context, @Nullable AttributeSet attrs) {
+    private static final String INFO_FORMATTER = "%d 赞同 · %d 评论 · %d 收藏";
+
+    public ListItemAnswerView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
     }
 
     @Override
     public void onBind(ListItemModel item) {
         ButterKnife.bind(this);
-        question = (Question) item;
-        textViewTitle.setText(question.title);
-        textViewSummary.setText(question.summary);
-        textViewAuthorName.setText(question.author.name);
-        textViewAuthorSign.setText(question.author.sign);
+        answer = (Answer) item;
+        textViewTitle.setText(answer.title);
+        textViewSummary.setText(answer.summary);
+        textViewAuthorName.setText(answer.author.name);
+        textViewAuthorSign.setText(answer.author.sign);
+
+        String info = String.format(Locale.CHINA, INFO_FORMATTER, answer.agree.size(),
+                answer.comment.size(), answer.collect.size());
+        textViewInfo.setText(info);
 
         Glide.with(getContext())
-                .load(question.author.avatar)
+                .load(answer.author.avatar)
                 .placeholder(R.drawable.avatar)
                 .error(R.drawable.avatar)
                 .into(imageViewAvatar);
@@ -77,6 +88,6 @@ public class ListItemQuestionView extends LinearLayout implements ListItemView {
     @OnClick
     public void onItemClick() {
         EventBus.getInstance().sendMessage(Event.Click.ON_QUESTION_CLICK,
-                question, "on question click");
+                answer, "on question click");
     }
 }

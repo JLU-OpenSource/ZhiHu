@@ -14,24 +14,36 @@
  *    limitations under the License.
  */
 
-package com.jlu.zhihu.service;
+package com.jlu.zhihu.model;
 
-import com.jlu.zhihu.model.Question;
-import org.springframework.data.domain.Pageable;
+import com.jlu.zhihu.R;
 
 import java.util.List;
+import java.util.Set;
 
-public interface QuestionService {
+public class Answer implements ListItemModel {
 
-    int SUMMARY_LENGTH = 200;
+    public int aid;
 
-    Question createQuestion(Question question, String html, String raw);
+    /* question id */
+    public int qid;
 
-    List<Question> findAll(Pageable pageable);
+    public User author;
 
-    Question findById(int id);
+    public String title;
 
-    long countAll();
+    public String summary;
 
-    String getQuestionPath();
+    public Set<User> agree;
+
+    public Set<User> collect;
+
+    public List<Comment> comment;
+
+    public long st = System.currentTimeMillis();
+
+    @Override
+    public int getLayoutId() {
+        return R.layout.list_item_answer;
+    }
 }

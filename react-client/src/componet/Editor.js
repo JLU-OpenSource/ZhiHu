@@ -44,27 +44,28 @@ class Editor extends React.Component {
     modalVisible: false,
     contentType: 'question',
     contentTitle: '',
-    saved: false,
-    confirmLoading: false
+    confirmLoading: false,
+    answerId: -1
   }
 
   async componentDidMount() {
     const type = this.state.options.type;
-    if (type === 'article') {
+    const _this = this;
+    if (type === 'article' || type === 'question') {
       notification['success']({
         key: 'tips',
         message: '快捷键支持！',
         description: '您可以使用Microsoft Word的常用快捷键，例如：按下 Control+S 或 Cmd+S 保存您当前创作的内容。',
         duration: 5,
       });
-    } else if (type === 'question') {
+    } else if (type === 'answer') {
       notification['info']({
         key: 'tips',
         message: '正在撰写答案',
         description: '您正在为问题 "' + this.state.options.body.title + '" 撰写答案，按下 Control+S 或 Cmd+S 保存，或点击右上角发布按钮发布答案。',
         duration: 8,
       });
-    } else {
+    } else if (type === 'draft') {
       notification['info']({
         key: 'tips',
         message: '正在恢复草稿',
@@ -73,60 +74,103 @@ class Editor extends React.Component {
       });
     }
     if (this.state.options.body != null) {
+      this.setState({ contentType: this.state.options.type })
       switch (this.state.options.type) {
         case 'draft':
           fetch(AjaxApi.host + "/draft/" + this.state.options.body.id + ".html")
             .then(response => response.text())
             .then(text => this.setState({ editorState: BraftEditor.createEditorState(text) }))
           break;
+        case 'answer':
+          EditorApi.getMyAnswer(this.state.options.body.key, function callback(response) {
+            if (response != null) {
+              _this.setState({ answerId: response.aid })
+              fetch(AjaxApi.host + "/answer/" + response.aid + ".html")
+                .then(response => response.text())
+                .then(text => _this.setState({ editorState: BraftEditor.createEditorState(text) }))
+            }
+          });
+          break;
         default: break;
       }
     }
+  }
+
+  handleSubmitToServer = () => {
+    if (this.state.contentType === 'answer') {
+      const rawString = this.state.editorState.toRAW()
+      const htmlString = this.state.editorState.toHTML()
+      const answer = {
+        'qid': this.state.options.body.key,
+        'author': JSON.parse(sessionStorage.getItem('user')),
+        'title': this.state.options.body.title
+      }
+      if (this.state.answerId !== -1) {
+        answer['aid'] = this.state.answerId
+      }
+      EditorApi.createAnswer(answer, htmlString, rawString, function callback(response) {
+        window.location.reload();
+      })
+    } else
+      this.setState({ modalVisible: true })
   }
 
   handleEditorChange = (editorState) => {
     this.setState({ editorState })
   }
 
-  submitContent = async () => {
-    this.setState({
-      contentType: 'draft',
-      contentTitle: '未命名 ' + moment().format('YYYY-MM-DD HH:mm:ss')
-    }, () => {
-      this.handleSubmit();
+  handleSave = () => {
+    const rawString = this.state.editorState.toRAW()
+    const htmlString = this.state.editorState.toHTML()
+    const _this = this;
+    let drfat;
+    if (this.state.contentType !== 'draft')
+      drfat = {
+        'title': '未命名 ' + moment().format('YYYY-MM-DD HH:mm:ss'),
+        'author': JSON.parse(sessionStorage.getItem('user'))
+      };
+    else
+      drfat = this.state.options.body;
+    EditorApi.saveDraft(drfat, htmlString, rawString, function callback(response) {
+      _this.setState({
+        confirmLoading: false, modalVisible: false,
+        contentType: 'draft', options: {
+          type: 'draft', body: response
+        }
+      })
+      message.success(' "' + response.title + '" 已经保存');
     })
   }
 
-  submitToServer = () => {
-    this.setState({ modalVisible: true })
-  }
-
   handleSubmit = () => {
-    if (this.state.contentTitle.length === 0 || this.state.contentTitle.trim().length === 0)
-      message.error("标题不能为空");
+    if (this.state.contentTitle.length === 0 ||
+      this.state.contentTitle.trim().length === 0
+      || this.state.contentTitle.length > 25)
+      message.error("标题不能为空并且不超过25个字符");
     else {
       const rawString = this.state.editorState.toRAW()
       const htmlString = this.state.editorState.toHTML()
       const _this = this;
       _this.setState({ confirmLoading: true })
-      if (_this.state.contentType === 'draft') {
-        const drfat = {
-          'title': _this.state.contentTitle,
-          'author': JSON.parse(sessionStorage.getItem('user'))
-        }
-        EditorApi.saveDraft(drfat, htmlString, rawString, function callback(response) {
-          _this.setState({ confirmLoading: false, modalVisible: false, saved: true })
-          message.success(' "' + response.title + '" 已经保存');
-        })
-      } else if (_this.state.contentType === 'question') {
+      if (_this.state.contentType === 'question') {
         const question = {
           'title': _this.state.contentTitle,
           'author': JSON.parse(sessionStorage.getItem('user'))
         }
         EditorApi.createQuestion(question, htmlString, rawString, function callback(response) {
-          _this.setState({ confirmLoading: false, modalVisible: false, saved: true })
+          _this.setState({ confirmLoading: false, modalVisible: false })
           message.success('问题已发布');
           _this.props.onSubmitQuestion();
+        })
+      } else if (_this.state.contentType === 'article') {
+        const article = {
+          'title': _this.state.contentTitle,
+          'author': JSON.parse(sessionStorage.getItem('user'))
+        }
+        EditorApi.createArticle(article, htmlString, rawString, function callback(response) {
+          _this.setState({ confirmLoading: false, modalVisible: false })
+          message.success('文章已发布');
+          _this.props.onSubmitArticle(response);
         })
       }
     }
@@ -153,14 +197,14 @@ class Editor extends React.Component {
         key: 'submit',
         type: 'button',
         text: '发布',
-        onClick: this.submitToServer
+        onClick: this.handleSubmitToServer
       }]
     const { editorState } = this.state
     return (
       <Typography>
         <BraftEditor
           onChange={this.handleEditorChange}
-          onSave={this.submitContent}
+          onSave={this.handleSave}
           extendControls={extendControls}
           value={editorState} />
         <Modal
@@ -175,7 +219,6 @@ class Editor extends React.Component {
               <RadioGroup onChange={this.onRadioChange} value={this.state.contentType}>
                 <Radio value='question'>发布问题</Radio>
                 <Radio value='article'>发表文章</Radio>
-                <Radio value='draft'>仅保存</Radio>
               </RadioGroup>
             </Form.Item>
             <Input placeholder='输入标题' onChange={this.handleTitleChange} />

@@ -28,6 +28,7 @@ import android.widget.TextView;
 
 import com.jlu.zhihu.R;
 import com.jlu.zhihu.adapter.FragmentAdapter;
+import com.jlu.zhihu.api.AnswerApi;
 import com.jlu.zhihu.api.QuestionApi;
 import com.jlu.zhihu.fragment.ListFragment;
 import com.jlu.zhihu.fragment.ScrollToHeadListener;
@@ -62,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
 
     private final List<Fragment> fragments = new ArrayList<Fragment>() {
         {
+            add(ListFragment.newInstance(AnswerApi.getInstance()));
             add(ListFragment.newInstance(QuestionApi.getInstance()));
 //            add(ListFragment.newInstance(QuestionApi.getInstance()));
 //            add(ListFragment.newInstance(QuestionApi.getInstance()));

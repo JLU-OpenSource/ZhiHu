@@ -16,22 +16,22 @@
 
 package com.jlu.zhihu.service;
 
-import com.jlu.zhihu.model.Question;
+import com.jlu.zhihu.model.Article;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
-public interface QuestionService {
+public interface ArticleService {
 
     int SUMMARY_LENGTH = 200;
 
-    Question createQuestion(Question question, String html, String raw);
+    Article findById(int id);
 
-    List<Question> findAll(Pageable pageable);
+    Article create(Article article,String raw,String html);
 
-    Question findById(int id);
+    List<Article> all(Pageable pageable);
 
     long countAll();
 
-    String getQuestionPath();
+    String getAnswerPath();
 }

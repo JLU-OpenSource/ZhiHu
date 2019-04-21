@@ -1,5 +1,7 @@
 import React from 'react';
 import { List, Avatar, Icon, Empty, Pagination } from 'antd';
+import AnswerApi from '../api/AnswerApi.js'
+import AjaxApi from '../api/AjaxApi.js'
 
 const listData = [];
 for (let i = 0; i < 3; i++) {
@@ -19,30 +21,58 @@ for (let i = 0; i < 3; i++) {
 
 class Recommends extends React.Component {
 
+  state = {
+    data: [],
+    page: 0,
+    count: 0
+  }
+
+  async componentDidMount() {
+    this.pullAnswers(this.state.page)
+    fetch(AjaxApi.host + "/api/answer/count", {
+      headers: {
+        'token': sessionStorage.getItem('token'),
+      }
+    }).then(response => response.text())
+      .then(text => this.setState({ count: parseInt(text) }))
+  }
+
+  pullAnswers = (page) => {
+    const data = [];
+    const _this = this;
+    AnswerApi.all(page, function (response) {
+      if (response !== null)
+        for (let i = 0; i < response.length; i++) {
+          data.push(response[i]);
+        }
+      _this.setState({ data: data })
+    });
+  }
+
   render() {
     return (
       <List
         itemLayout="vertical"
         size="large"
         locale={<Empty />}
-        dataSource={listData}
-        footer={<Pagination simple pageSize={3} defaultCurrent={1} total={8} style={{ marginTop: '10px', textAlign: 'center' }} />}
+        dataSource={this.state.data}
+        footer={<Pagination simple pageSize={3} defaultCurrent={1} total={this.state.count} style={{ marginTop: '10px', textAlign: 'center' }} />}
         renderItem={item => (
           <List.Item
             actions={
               [
-                <span><Icon type="star-o" style={{ marginRight: 8 }} />156 收藏</span>,
-                <span><Icon type="like-o" style={{ marginRight: 8 }} />156 赞同</span>,
-                <span><Icon type="message" style={{ marginRight: 8 }} />156 评论</span>,
+                <span><Icon type="star-o" style={{ marginRight: 8 }} />{item.collect.length} 收藏</span>,
+                <span><Icon type="like-o" style={{ marginRight: 8 }} />{item.agree.length} 赞同</span>,
+                <span><Icon type="message" style={{ marginRight: 8 }} />{item.comment.length} 评论</span>,
                 <span onClick={() => this.props.fullAnswerClick(item)}><Icon type="read" style={{ marginRight: 8 }} />查看原答案</span>
               ]}>
             <a href='javascrpit:void(0)'><h3>{item.title}</h3></a>
             <List.Item.Meta
               avatar={<Avatar src={item.author.avatar} />}
-              title={<a href={item.href}>{item.author.name}</a>}
+              title={item.author.name}
               description={item.author.sign}
             />
-            {item.content}
+            {item.summary}
           </List.Item>
         )}
       />
