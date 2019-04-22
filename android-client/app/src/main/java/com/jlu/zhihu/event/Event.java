@@ -17,11 +17,16 @@
 package com.jlu.zhihu.event;
 
 
-public interface Event {
+public class Event {
 
-    interface Click {
+    public static class Click {
+        /* Answer Fragment */
+        public static final int ON_ANSWER_CLICK = 0x11000001;
 
         /* Question Fragment */
-        int ON_QUESTION_CLICK = 0x11000001;
+        public static final int ON_QUESTION_CLICK = 0x21000001;
+
+        /* Article Fragment */
+        public static final int ON_ARTICLE_CLICK = 0x31000001;
     }
 }

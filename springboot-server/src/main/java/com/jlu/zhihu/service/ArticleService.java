@@ -17,6 +17,7 @@
 package com.jlu.zhihu.service;
 
 import com.jlu.zhihu.model.Article;
+import com.jlu.zhihu.model.User;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
@@ -27,9 +28,15 @@ public interface ArticleService {
 
     Article findById(int id);
 
-    Article create(Article article,String raw,String html);
+    Article create(Article article, String raw, String html);
+
+    Article metaData(Article article);
 
     List<Article> all(Pageable pageable);
+
+    List<Article> findCollect(User user);
+
+    void removeCollect(Article article, User user);
 
     long countAll();
 

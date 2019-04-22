@@ -28,11 +28,19 @@ public interface AnswerService {
 
     Answer createAnswer(Answer answer, String html, String raw);
 
+    Answer metaData(Answer answer);
+
     Answer findById(int id);
 
     Answer findByAuthor(int qid, User author);
 
     List<Answer> all(Pageable pageable);
+
+    List<Answer> allUnderQid(int qid, Pageable pageable);
+
+    List<Answer> findCollect(User user);
+
+    void removeCollect(Answer answer, User user);
 
     long countAll();
 

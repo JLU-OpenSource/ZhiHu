@@ -181,7 +181,6 @@ class Editor extends React.Component {
   }
 
   onRadioChange = (e) => {
-    console.log(e.target.value)
     this.setState({
       contentType: e.target.value,
     });

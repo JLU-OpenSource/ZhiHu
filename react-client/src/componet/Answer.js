@@ -6,6 +6,7 @@ import {
 import Comments from './Comments.js';
 import AjaxApi from '../api/AjaxApi.js'
 import 'braft-editor/dist/output.css'
+import AnswerApi from '../api/AnswerApi.js';
 
 class Answer extends React.Component {
 
@@ -27,6 +28,24 @@ class Answer extends React.Component {
     fetch(AjaxApi.host + "/answer/" + this.state.answer.aid + ".html")
       .then(response => response.text())
       .then(text => this.setState({ content: text }))
+
+    const _answer = this.state.answer;
+    const user = JSON.parse(sessionStorage.getItem('user'))
+    let collect = -1;
+    for (let i = 0; i < _answer.collect.length; i++) {
+      if (_answer.collect[i].id === user.id)
+        collect = i;
+    }
+    let agree = -1;
+    for (let i = 0; i < _answer.agree.length; i++) {
+      if (_answer.agree[i].id === user.id)
+        agree = i;
+    }
+
+    this.setState({
+      collectAcitve: collect !== -1,
+      agreeAcitve: agree !== -1
+    })
   }
 
   handleSubmit = (e) => {
@@ -47,32 +66,56 @@ class Answer extends React.Component {
     this.setState({ comment: e.target.value });
   }
 
-  onCollectClick = () => {
-    this.setState({
-      collectAcitve: !this.state.collectAcitve,
-      collectCount: this.state.collectCount + (this.state.collectAcitve ? -1 : 1)
-    },
-      () => {
-        if (this.state.collectAcitve) {
-          message.success("已添加到收藏夹");
-        } else {
-          message.success("已取消收藏");
-        }
-      })
-  }
-
-  onAgreeClick = () => {
-    this.setState({
-      agreeAcitve: !this.state.agreeAcitve,
-      agreeCount: this.state.agreeCount + (this.state.agreeAcitve ? -1 : 1)
-    },
-      () => {
-        if (this.state.agreeAcitve) {
-          message.success("已赞同");
-        } else {
-          message.success("已取消赞同");
-        }
-      })
+  handleMetaDataClick = (type) => {
+    const user = JSON.parse(sessionStorage.getItem('user'))
+    const _answer = this.state.answer;
+    let index = -1;
+    if (type) {
+      for (let i = 0; i < _answer.agree.length; i++) {
+        if (_answer.agree[i].id === user.id)
+          index = i;
+      }
+      if (index === -1) {
+        _answer.agree.push(user)
+      } else {
+        _answer.agree.splice(index, 1);
+      }
+      this.setState({
+        answer: _answer,
+        agreeAcitve: _answer.agree.indexOf(user) !== -1,
+      },
+        () => {
+          if (this.state.agreeAcitve) {
+            message.success("已赞同");
+          } else {
+            message.success("已取消赞同");
+          }
+        })
+    } else {
+      for (let i = 0; i < _answer.collect.length; i++) {
+        if (_answer.collect[i].id === user.id)
+          index = i;
+      }
+      if (index === -1) {
+        _answer.collect.push(user)
+      } else {
+        _answer.collect.splice(index, 1);
+      }
+      this.setState({
+        answer: _answer,
+        collectAcitve: _answer.collect.indexOf(user) !== -1,
+      },
+        () => {
+          if (this.state.collectAcitve) {
+            message.success("已收藏");
+          } else {
+            message.success("已取消收藏");
+          }
+        })
+    }
+    AnswerApi.metaData(_answer, function (response) {
+      console.log(response)
+    })
   }
 
   render() {
@@ -88,11 +131,11 @@ class Answer extends React.Component {
               actions={
                 [
                   <span className={this.state.collectAcitve ? "active" : null}
-                    onClick={() => this.onCollectClick()}
-                  ><Icon type="star-o" style={{ marginRight: 8 }} />{this.state.collectCount} 收藏</span>,
+                    onClick={() => this.handleMetaDataClick(false)}
+                  ><Icon type="star-o" style={{ marginRight: 8 }} />{this.state.answer.collect.length} 收藏</span>,
                   <span className={this.state.agreeAcitve ? "active" : null}
-                    onClick={() => this.onAgreeClick()}
-                  ><Icon type="like-o" style={{ marginRight: 8 }} />{this.state.agreeCount} 赞同</span>,
+                    onClick={() => this.handleMetaDataClick(true)}
+                  ><Icon type="like-o" style={{ marginRight: 8 }} />{this.state.answer.agree.length} 赞同</span>,
                   <span onClick={() => this.setState({ showComments: true })}><Icon type="message" style={{ marginRight: 8 }} />{this.state.answer.comment.length} 评论</span>,
                   <span onClick={() => this.props.createAnswerClick({ key: item.qid })}><Icon type="edit" style={{ marginRight: 8 }} />撰写答案</span>
                 ]}>

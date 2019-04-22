@@ -14,22 +14,33 @@
  *    limitations under the License.
  */
 
-package com.jlu.zhihu.repository;
+package com.jlu.zhihu.model;
 
-import com.jlu.zhihu.model.Answer;
-import com.jlu.zhihu.model.User;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import com.jlu.zhihu.R;
 
 import java.util.List;
+import java.util.Set;
 
-@Repository
-public interface AnswerRepository extends JpaRepository<Answer, Integer> {
+public class Article implements ListItemModel {
 
-    Answer findAnswerByAid(int id);
+    public int id;
 
-    Answer findByAuthorAndQid(User author, int qid);
+    public String title;
 
-    List<Answer> findAllByQid(int qid, Pageable pageable);
+    public String summary;
+
+    public User author;
+
+    public Set<User> agree;
+
+    public Set<User> collect;
+
+    public List<Comment> comment;
+
+    public long st;
+
+    @Override
+    public int getLayoutId() {
+        return R.layout.list_item_article;
+    }
 }

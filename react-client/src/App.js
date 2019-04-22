@@ -5,7 +5,6 @@ import Editor from './componet/Editor.js'
 import LoginForm from './componet/form/LoginForm.js';
 import Recommends from './componet/Recommeds.js'
 import Questions from './componet/Questions.js';
-import Comments from './componet/Comments.js';
 import Answer from "./componet/Answer.js";
 import Article from './componet/Article.js';
 import Answers from './componet/Answers.js';
@@ -30,7 +29,8 @@ class App extends React.Component {
     },
     currentUser: null,
     answer: null,
-    article: null
+    article: null,
+    question: null
   }
 
   async componentDidMount() {
@@ -87,9 +87,11 @@ class App extends React.Component {
     })
   }
 
-  handleAllAnswerClick = (question) => {
+  handleAllAnswerClick = (body) => {
+    console.log(body)
     this.setState({
       content: 'answers',
+      question: body
     })
   }
 
@@ -114,7 +116,7 @@ class App extends React.Component {
     switch (this.state.content) {
       case 'recommend': return <Recommends fullAnswerClick={this.handleFullAnswerClick} />;
       case 'answer': return <Answer createAnswerClick={this.handleCreateAnswerClick} answer={this.state.answer} />;
-      case 'answers': return <Answers fullAnswerClick={this.handleFullAnswerClick} />
+      case 'answers': return <Answers qid={this.state.question.key} fullAnswerClick={this.handleFullAnswerClick} />
       case 'question': return <Questions
         createAnswerClick={this.handleCreateAnswerClick}
         allAnswerClick={this.handleAllAnswerClick} />;
@@ -122,7 +124,6 @@ class App extends React.Component {
       case 'editor': return <Editor options={this.state.editorOptions}
         onSubmitQuestion={() => this.setState({ content: 'question', tab: 'question' })}
         onSubmitArticle={(article) => this.setState({ content: 'article', article: article, tab: 'article' })} />;
-      case 'idea': return <Comments />;
       case 'collection': return <Collects />;
       case 'drafts': return <Drafts restoreDraft={this.handleDraftRestore} />
       default: return <Empty style={{ marginTop: '200px' }} />;
@@ -147,7 +148,6 @@ class App extends React.Component {
                     <Menu.Item key="recommend"><span><Icon type="fire" />推荐</span></Menu.Item>
                     <Menu.Item key="question"><span><Icon type="question-circle" />问题</span></Menu.Item>
                     <Menu.Item key="article"><span><Icon type="read" />文章</span></Menu.Item>
-                    <Menu.Item key="idea"><span><Icon type="star" />想法</span></Menu.Item>
                   </SubMenu>
                   <Menu.Item key="editor"><Icon type="edit" />编辑器</Menu.Item>
                   <Menu.Item key="collection"><span><Icon type="tags" />收藏夹</span></Menu.Item>

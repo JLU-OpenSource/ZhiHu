@@ -14,22 +14,9 @@
  *    limitations under the License.
  */
 
-package com.jlu.zhihu.repository;
+package com.jlu.zhihu.api.service;
 
-import com.jlu.zhihu.model.Answer;
-import com.jlu.zhihu.model.User;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+public interface ArticleService extends ListService {
 
-import java.util.List;
-
-@Repository
-public interface AnswerRepository extends JpaRepository<Answer, Integer> {
-
-    Answer findAnswerByAid(int id);
-
-    Answer findByAuthorAndQid(User author, int qid);
-
-    List<Answer> findAllByQid(int qid, Pageable pageable);
+    String PATH_ALL_ARTICLE = HOST + "/api/article/all";
 }

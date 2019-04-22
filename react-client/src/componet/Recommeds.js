@@ -3,22 +3,6 @@ import { List, Avatar, Icon, Empty, Pagination } from 'antd';
 import AnswerApi from '../api/AnswerApi.js'
 import AjaxApi from '../api/AjaxApi.js'
 
-const listData = [];
-for (let i = 0; i < 3; i++) {
-  listData.push(
-    {
-      href: '#',
-      title: '什么是MarkDown？如何使用MarkDown？',
-      author: {
-        name: `知乎刘看山`,
-        avatar: 'https://s2.ax1x.com/2019/04/02/A6ab3d.jpg',
-        sign: '发现更大的世界',
-      },
-      content: 'Markdown 是一个 Web 上使用的文本到HTML的转换工具，可以通过简单、易读易写的文本格式生成结构化的HTML文档。目前 github、Stackoverflow 等网站均支持这种格式。',
-    }
-  );
-}
-
 class Recommends extends React.Component {
 
   state = {
@@ -35,6 +19,11 @@ class Recommends extends React.Component {
       }
     }).then(response => response.text())
       .then(text => this.setState({ count: parseInt(text) }))
+  }
+
+  onShowSizeChange = (currentPage) => {
+    this.setState({ page: currentPage },
+      () => this.pullAnswers())
   }
 
   pullAnswers = (page) => {
@@ -56,7 +45,7 @@ class Recommends extends React.Component {
         size="large"
         locale={<Empty />}
         dataSource={this.state.data}
-        footer={<Pagination simple pageSize={3} defaultCurrent={1} total={this.state.count} style={{ marginTop: '10px', textAlign: 'center' }} />}
+        footer={<Pagination simple onChange={this.onShowSizeChange} pageSize={3} defaultCurrent={1} total={this.state.count} style={{ marginTop: '10px', textAlign: 'center' }} />}
         renderItem={item => (
           <List.Item
             actions={

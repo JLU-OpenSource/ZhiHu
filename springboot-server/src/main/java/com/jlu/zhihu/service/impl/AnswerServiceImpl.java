@@ -27,6 +27,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -51,6 +52,14 @@ public class AnswerServiceImpl implements AnswerService {
     }
 
     @Override
+    public Answer metaData(Answer answer) {
+        Answer database = answerRepository.findAnswerByAid(answer.aid);
+        if (database != null) database = answerRepository.save(answer);
+        else database = answer;
+        return database;
+    }
+
+    @Override
     public Answer findById(int aid) {
         return answerRepository.findAnswerByAid(aid);
     }
@@ -63,6 +72,28 @@ public class AnswerServiceImpl implements AnswerService {
     @Override
     public List<Answer> all(Pageable pageable) {
         return answerRepository.findAll(pageable).getContent();
+    }
+
+    @Override
+    public List<Answer> allUnderQid(int qid, Pageable pageable) {
+        return answerRepository.findAllByQid(qid, pageable);
+    }
+
+    @Override
+    public List<Answer> findCollect(User user) {
+        List<Answer> all = answerRepository.findAll();
+        List<Answer> collect = new ArrayList<>();
+        for (Answer a : all) {
+            if (a.collect.contains(user))
+                collect.add(a);
+        }
+        return collect;
+    }
+
+    @Override
+    public void removeCollect(Answer answer, User user) {
+        answer.collect.remove(user);
+        answerRepository.save(answer);
     }
 
     @Override

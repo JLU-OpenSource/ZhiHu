@@ -17,6 +17,7 @@
 package com.jlu.zhihu.controller;
 
 import com.jlu.zhihu.model.Article;
+import com.jlu.zhihu.model.User;
 import com.jlu.zhihu.net.Request;
 import com.jlu.zhihu.net.Response;
 import com.jlu.zhihu.service.ArticleService;
@@ -63,10 +64,35 @@ public class ArticleController {
         return response;
     }
 
+    @PostMapping("/metadata")
+    public Response<Article> metaData(@RequestBody Request<Article> request) {
+        Response<Article> response = new Response<>();
+        response.body = articleService.metaData(request.body);
+        return response;
+    }
+
     @GetMapping("/{aid}")
     public Response<Article> getAnswer(@PathVariable int aid) {
         Response<Article> response = new Response<>();
         response.body = articleService.findById(aid);
+        return response;
+    }
+
+    @PostMapping("/collect")
+    public Response<List<Article>> getCollect(@RequestBody Request<User> request) {
+        Response<List<Article>> response = new Response<>();
+        if (request.user.equals(request.body)) {
+            response.body = articleService.findCollect(request.body);
+        } else {
+            response.status = HttpStatus.FORBIDDEN;
+        }
+        return response;
+    }
+
+    @PostMapping("/removeCollect")
+    public Response<Void> removeCollect(@RequestBody Request<Article> request) {
+        Response<Void> response = new Response<>();
+        articleService.removeCollect(request.body, request.user);
         return response;
     }
 

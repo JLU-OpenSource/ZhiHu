@@ -29,6 +29,7 @@ import android.widget.TextView;
 import com.jlu.zhihu.R;
 import com.jlu.zhihu.adapter.FragmentAdapter;
 import com.jlu.zhihu.api.AnswerApi;
+import com.jlu.zhihu.api.ArticleApi;
 import com.jlu.zhihu.api.QuestionApi;
 import com.jlu.zhihu.fragment.ListFragment;
 import com.jlu.zhihu.fragment.ScrollToHeadListener;
@@ -55,19 +56,16 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
     private Fragment currentFragment;
 
     private int[] active = new int[]{R.drawable.tab_home_active, R.drawable.tab_question_active,
-            R.drawable.tab_article_active, R.drawable.tab_idea_active, R.drawable.tab_my_active};
+            R.drawable.tab_article_active, R.drawable.tab_my_active};
     private int[] normal = new int[]{R.drawable.tab_home, R.drawable.tab_question,
-            R.drawable.tab_article, R.drawable.tab_idea, R.drawable.tab_my};
-    private int[] title = new int[]{R.string.tab_home, R.string.tab_question,
-            R.string.tab_article, R.string.tab_idea, R.string.tab_my};
+            R.drawable.tab_article, R.drawable.tab_my};
+    private int[] title = new int[]{R.string.tab_home, R.string.tab_question, R.string.tab_article, R.string.tab_my};
 
     private final List<Fragment> fragments = new ArrayList<Fragment>() {
         {
             add(ListFragment.newInstance(AnswerApi.getInstance()));
             add(ListFragment.newInstance(QuestionApi.getInstance()));
-//            add(ListFragment.newInstance(QuestionApi.getInstance()));
-//            add(ListFragment.newInstance(QuestionApi.getInstance()));
-//            add(ListFragment.newInstance(QuestionApi.getInstance()));
+            add(ListFragment.newInstance(ArticleApi.getInstance()));
             add(new UserFragment());
         }
     };

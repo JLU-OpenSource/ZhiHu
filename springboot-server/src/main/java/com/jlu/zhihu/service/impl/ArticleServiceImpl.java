@@ -17,6 +17,7 @@
 package com.jlu.zhihu.service.impl;
 
 import com.jlu.zhihu.model.Article;
+import com.jlu.zhihu.model.User;
 import com.jlu.zhihu.repository.ArticleRepository;
 import com.jlu.zhihu.service.ArticleService;
 import com.jlu.zhihu.util.FileUtil;
@@ -53,15 +54,40 @@ public class ArticleServiceImpl implements ArticleService {
         article.summary = RawUtil.getSummaryByRaw(raw, SUMMARY_LENGTH);
         article = articleRepository.save(article);
         FileUtil.write2File(html, getAnswerPath() + article.id + ".html");
-        article.collect=new HashSet<>();
-        article.agree=new HashSet<>();
-        article.comment=new ArrayList<>();
+        article.collect = new HashSet<>();
+        article.agree = new HashSet<>();
+        article.comment = new ArrayList<>();
         return article;
+    }
+
+    @Override
+    public Article metaData(Article article) {
+        Article database = articleRepository.findArticleById(article.id);
+        if (database != null) database = articleRepository.save(article);
+        else database = article;
+        return database;
     }
 
     @Override
     public List<Article> all(Pageable pageable) {
         return articleRepository.findAll(pageable).getContent();
+    }
+
+    @Override
+    public List<Article> findCollect(User user) {
+        List<Article> all = articleRepository.findAll();
+        List<Article> collect = new ArrayList<>();
+        for (Article a : all) {
+            if (a.collect.contains(user))
+                collect.add(a);
+        }
+        return collect;
+    }
+
+    @Override
+    public void removeCollect(Article article, User user) {
+        article.collect.remove(user);
+        articleRepository.save(article);
     }
 
     @Override

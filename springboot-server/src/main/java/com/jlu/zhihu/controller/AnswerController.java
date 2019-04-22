@@ -17,6 +17,7 @@
 package com.jlu.zhihu.controller;
 
 import com.jlu.zhihu.model.Answer;
+import com.jlu.zhihu.model.User;
 import com.jlu.zhihu.net.Request;
 import com.jlu.zhihu.net.Response;
 import com.jlu.zhihu.service.AnswerService;
@@ -63,6 +64,13 @@ public class AnswerController {
         return response;
     }
 
+    @PostMapping("/metadata")
+    public Response<Answer> metaData(@RequestBody Request<Answer> request) {
+        Response<Answer> response = new Response<>();
+        response.body = answerService.metaData(request.body);
+        return response;
+    }
+
     @GetMapping("/{aid}")
     public Response<Answer> getAnswer(@PathVariable int aid) {
         Response<Answer> response = new Response<>();
@@ -77,8 +85,36 @@ public class AnswerController {
         return response;
     }
 
+    @PostMapping("/question")
+    public Response<List<Answer>> getAnswersUnderQuestion(@RequestBody Request<Integer> request) {
+        Response<List<Answer>> response = new Response<>();
+        Sort sort = new Sort(Sort.Direction.DESC, "st");
+        Pageable pageable = PageRequest.of(Integer.valueOf(request.args.get("page"))
+                , Integer.valueOf(request.args.get("size")), sort);
+        response.body = answerService.allUnderQid(request.body, pageable);
+        return response;
+    }
+
+    @PostMapping("/collect")
+    public Response<List<Answer>> getCollect(@RequestBody Request<User> request) {
+        Response<List<Answer>> response = new Response<>();
+        if (request.user.equals(request.body)) {
+            response.body = answerService.findCollect(request.body);
+        } else {
+            response.status = HttpStatus.FORBIDDEN;
+        }
+        return response;
+    }
+
+    @PostMapping("/removeCollect")
+    public Response<Void> removeCollect(@RequestBody Request<Answer> request) {
+        Response<Void> response = new Response<>();
+        answerService.removeCollect(request.body, request.user);
+        return response;
+    }
+
     @GetMapping("/count")
-    public long countAll(){
+    public long countAll() {
         return answerService.countAll();
     }
 }

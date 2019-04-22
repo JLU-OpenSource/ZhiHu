@@ -1,51 +1,113 @@
-import React from 'react';
-import { List, Avatar, Icon, Empty, Pagination } from 'antd';
+import React from 'react'
+import { Table, message, Popconfirm, Empty } from 'antd';
+import moment from "moment";
+import AjaxApi from '../api/AjaxApi.js'
 
-const listData = [];
-for (let i = 0; i < 2; i++) {
-  listData.push(
-    {
-      href: '#',
-      title: '什么是MarkDown？如何使用MarkDown？',
-      author: {
-        name: `知乎刘看山`,
-        avatar: 'https://s2.ax1x.com/2019/04/02/A6ab3d.jpg',
-        sign: '发现更大的世界',
-      },
-      content: 'Markdown 是一个 Web 上使用的文本到HTML的转换工具，可以通过简单、易读易写的文本格式生成结构化的HTML文档。目前 github、Stackoverflow 等网站均支持这种格式。',
-    }
-  );
-}
-
+const data = [];
+let localAnswer = [];
+let localArticle = [];
 class Collects extends React.Component {
 
+  state = {
+    data: [],
+    empty: true
+  }
+
+  handleConfirmDel = (key, type) => {
+    if (type === '回答')
+      AjaxApi.post('/api/answer/removeCollect', AjaxApi.body(localAnswer[key - 1], {})
+      ).then(response => {
+        message.success("成功删除收藏")
+        this.pullCollects();
+      })
+    else
+      AjaxApi.post('/api/article/removeCollect', AjaxApi.body(localArticle[0 - key - 1], {})
+      ).then(response => {
+        message.success("成功删除收藏")
+        this.pullCollects();
+      })
+  }
+
+  pullCollects = () => {
+    const _this = this;
+    data.length = 0;
+    localAnswer.length = 0;
+    localArticle.length = 0;
+    AjaxApi.post('/api/answer/collect', AjaxApi.body(JSON.parse(sessionStorage.getItem('user')), {})
+    ).then(response => {
+      if (response != null && response.body.length !== 0) {
+        _this.setState({ empty: false });
+        localAnswer = response.body;
+        for (let i = 0; i < response.body.length; i++) {
+          data.push({
+            key: i + 1,
+            title: response.body[i].title,
+            time: moment(response.body[i].st).format('YYYY-MM-DD HH:mm:ss'),
+            type: "回答",
+          })
+        }
+      } else {
+        _this.setState({ empty: true });
+      }
+      _this.setState({ data: data })
+    })
+
+    AjaxApi.post('/api/article/collect', AjaxApi.body(JSON.parse(sessionStorage.getItem('user')), {})
+    ).then(response => {
+      if (response != null && response.body.length !== 0) {
+        _this.setState({ empty: false });
+        localArticle = response.body;
+        for (let i = 0; i < response.body.length; i++) {
+          data.push({
+            key: 0 - i - 1,
+            title: response.body[i].title,
+            time: moment(response.body[i].st).format('YYYY-MM-DD HH:mm:ss'),
+            type: "文章",
+          })
+        }
+      } else {
+        _this.setState({ empty: true });
+      }
+      _this.setState({ data: data })
+    })
+  }
+
+  async componentDidMount() {
+    this.pullCollects();
+  }
+
   render() {
+    const columns = [
+      {
+        title: '标题',
+        dataIndex: 'title',
+        key: 'title',
+      },
+      {
+        title: '日期',
+        dataIndex: 'time',
+        key: 'time',
+      },
+      {
+        title: '类型',
+        dataIndex: 'type',
+        key: 'type',
+      },
+      {
+        title: '操作',
+        key: 'id',
+        render: (record) => (
+          <span>
+            <Popconfirm title="要删除此收藏吗？此操作无法恢复。"
+              onConfirm={() => this.handleConfirmDel(record.key, record.type)}>
+              <a href='javascrpit:void(0)'>删除</a>
+            </Popconfirm>
+          </span>
+        ),
+      }];
     return (
-      <List
-        itemLayout="vertical"
-        size="large"
-        locale={<Empty />}
-        dataSource={listData}
-        footer={<Pagination simple pageSize={3} defaultCurrent={1} total={8} style={{ marginTop: '10px', textAlign: 'center' }} />}
-        renderItem={item => (
-          <List.Item
-            actions={
-              [
-                <span><Icon type="star-o" style={{ marginRight: 8 }} />156 收藏</span>,
-                <span><Icon type="like-o" style={{ marginRight: 8 }} />156 赞同</span>,
-                <span><Icon type="message" style={{ marginRight: 8 }} />156 评论</span>,
-                <span onClick={() => this.props.fullAnswerClick(item)}><Icon type="read" style={{ marginRight: 8 }} />查看原答案</span>
-              ]}>
-            <a href='javascrpit:void(0)'><h3>{item.title}</h3></a>
-            <List.Item.Meta
-              avatar={<Avatar src={item.author.avatar} />}
-              title={<a href={item.href}>{item.author.name}</a>}
-              description={item.author.sign}
-            />
-            {item.content}
-          </List.Item>
-        )}
-      />
+      this.state.empty ? <Empty style={{ marginTop: '100px' }} /> :
+        <Table columns={columns} dataSource={this.state.data} />
     );
   }
 }

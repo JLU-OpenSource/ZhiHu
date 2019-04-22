@@ -34,10 +34,10 @@ public class Article {
     @OneToOne
     public User author;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     public Set<User> agree;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     public Set<User> collect;
 
     @OneToMany(fetch = FetchType.EAGER)

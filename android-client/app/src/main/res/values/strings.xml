@@ -67,4 +67,5 @@
     <string name="copyright">©Copyright chengjie.jlu@qq.com</string>
     <string name="register">注册知乎账号</string>
     <string name="input_name">输入昵称</string>
+    <string name="submit_an_article">发表了文章</string>
 </resources>
