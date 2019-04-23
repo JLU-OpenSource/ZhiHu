@@ -25,11 +25,14 @@ const UserApi = {
   },
 
   getCurrentUser: function (callback) {
-    AjaxApi.post('/user/api/email', AjaxApi.body(sessionStorage.getItem('email'), {})
-    ).then(response => {
-      if (response.status === 200) sessionStorage.setItem('user', JSON.stringify(response.body))
-      callback(response.status === 200 ? response.body : null);
-    })
+    if (sessionStorage.getItem('email') === null) {
+      callback(null)
+    } else
+      AjaxApi.post('/user/api/email', AjaxApi.body(sessionStorage.getItem('email'), {})
+      ).then(response => {
+        if (response.status === 200) sessionStorage.setItem('user', JSON.stringify(response.body))
+        callback(response.status === 200 ? response.body : null);
+      })
   }
 }
 
