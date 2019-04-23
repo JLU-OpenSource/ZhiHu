@@ -16,16 +16,10 @@
 
 package com.jlu.zhihu.repository;
 
-import com.jlu.zhihu.model.User;
+import com.jlu.zhihu.model.Comment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Integer> {
-
-    User findUserById(int id);
-
-    User findUserByEmail(String email);
-
-    User findByEmailAndPassword(String email,String password);
+public interface CommentRepository extends JpaRepository<Comment, Integer> {
 }

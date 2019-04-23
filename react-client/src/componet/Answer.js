@@ -54,7 +54,21 @@ class Answer extends React.Component {
       this.state.comment.trim().length === 0) {
       message.error('不能发布空评论');
     } else {
-      console.log(this.state.comment)
+      const comment = {
+        content: this.state.comment,
+        author: JSON.parse(sessionStorage.getItem('user'))
+      }
+      AjaxApi.post('/api/comment/create', AjaxApi.body(comment, { id: this.state.answer.aid, type: 'answer' })
+      ).then(response => {
+        if (response.status === 200) {
+          message.success("成功发表评论")
+          const answer = this.state.answer;
+          answer.comment.push(response.body);
+          this.setState({ answer: answer })
+          this.setState({ comment: '' })
+        } else
+          message.error("发表评论失败")
+      })
     }
   }
 
@@ -137,7 +151,7 @@ class Answer extends React.Component {
                     onClick={() => this.handleMetaDataClick(true)}
                   ><Icon type="like-o" style={{ marginRight: 8 }} />{this.state.answer.agree.length} 赞同</span>,
                   <span onClick={() => this.setState({ showComments: true })}><Icon type="message" style={{ marginRight: 8 }} />{this.state.answer.comment.length} 评论</span>,
-                  <span onClick={() => this.props.createAnswerClick({ key: item.qid })}><Icon type="edit" style={{ marginRight: 8 }} />撰写答案</span>
+                  <span onClick={() => this.props.createAnswerClick({ key: item.qid, title: item.title })}><Icon type="edit" style={{ marginRight: 8 }} />撰写答案</span>
                 ]}>
               <a href='javascrpit:void(0)'><h3>{item.title}</h3></a>
               <List.Item.Meta
@@ -158,12 +172,12 @@ class Answer extends React.Component {
           <Comment
             avatar={(
               <Avatar
-                src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+                src={JSON.parse(sessionStorage.getItem('user')).avatar}
                 alt="Han Solo"
               />
             )}
             content={(
-              <Input placeholder='输入评论内容，然后按下回车发布'
+              <Input placeholder='输入评论内容，然后按下回车发布' value={this.state.comment}
                 onChange={(e) => { this.handleInputChange(e) }} />
             )}
           />
@@ -175,7 +189,7 @@ class Answer extends React.Component {
           placement="right"
           onClose={this.onDrawerClose}
           closable={true}>
-          <Comments />
+          <Comments id={this.state.answer.aid} type='answer' />
         </Drawer>
       </div>
     );

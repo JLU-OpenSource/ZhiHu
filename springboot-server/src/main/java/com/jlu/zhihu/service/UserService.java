@@ -16,7 +16,10 @@
 
 package com.jlu.zhihu.service;
 
+import com.jlu.zhihu.model.Question;
 import com.jlu.zhihu.model.User;
+
+import java.util.List;
 
 public interface UserService {
 
@@ -25,4 +28,6 @@ public interface UserService {
     User register(User user);
 
     User login(User user);
+
+    List<Question> getQuestion(int id);
 }

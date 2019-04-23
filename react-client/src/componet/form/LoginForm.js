@@ -78,13 +78,13 @@ class LoginForm extends React.Component {
               <Form.Item>
                 <Input allowClear
                   onChange={(e) => { this.handleInputChange('avatar', e) }}
-                  size='large' type="url" placeholder="头像链接"
+                  size='large' type="url" placeholder="头像链接(可选)"
                   prefix={<Icon type="smile" style={{ color: 'rgba(0,0,0,.25)', padding: '0px' }} />} />
               </Form.Item>
               <Form.Item>
                 <Input allowClear
                   onChange={(e) => { this.handleInputChange('site', e) }}
-                  size='large' type="url" placeholder="个人站点"
+                  size='large' type="url" placeholder="个人站点(可选)"
                   prefix={<Icon type="cloud" style={{ color: 'rgba(0,0,0,.25)', padding: '0px' }} />} />
               </Form.Item>
             </Panel>

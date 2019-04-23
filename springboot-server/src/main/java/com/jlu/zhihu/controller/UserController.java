@@ -16,6 +16,7 @@
 
 package com.jlu.zhihu.controller;
 
+import com.jlu.zhihu.model.Question;
 import com.jlu.zhihu.model.User;
 import com.jlu.zhihu.net.Request;
 import com.jlu.zhihu.net.Response;
@@ -23,10 +24,9 @@ import com.jlu.zhihu.security.TokenManager;
 import com.jlu.zhihu.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/user")
@@ -73,4 +73,12 @@ public class UserController {
             response.status = HttpStatus.NOT_FOUND;
         return response;
     }
+
+    @GetMapping("/question/{id}")
+    public Response<List<Question>> getQuestion(@PathVariable int id) {
+        Response<List<Question>> response = new Response<>();
+        response.body = userService.getQuestion(id);
+        return response;
+    }
+
 }

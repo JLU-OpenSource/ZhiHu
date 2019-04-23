@@ -20,14 +20,16 @@ import javax.persistence.*;
 
 @Entity
 public class Comment {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public int id;
-    
+
     @Column(nullable = false)
     public String content;
-    
+
     @OneToOne
     public User author;
+
+    public long st = System.currentTimeMillis();
 }

@@ -16,6 +16,8 @@
 
 package com.jlu.zhihu.service.impl;
 
+import com.jlu.zhihu.model.Question;
+import com.jlu.zhihu.repository.QuestionRepository;
 import com.jlu.zhihu.util.Encoder;
 import com.jlu.zhihu.model.User;
 import com.jlu.zhihu.repository.UserRepository;
@@ -23,14 +25,19 @@ import com.jlu.zhihu.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final QuestionRepository questionRepository;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository,
+                           QuestionRepository questionRepository) {
         this.userRepository = userRepository;
+        this.questionRepository = questionRepository;
     }
 
     @Override
@@ -50,5 +57,11 @@ public class UserServiceImpl implements UserService {
         user.email = Encoder.md5(user.email);
         user.password = Encoder.md5(user.password);
         return userRepository.findByEmailAndPassword(user.email, user.password);
+    }
+
+    @Override
+    public List<Question> getQuestion(int id) {
+        User user = userRepository.findUserById(id);
+        return questionRepository.findByAuthor(user);
     }
 }

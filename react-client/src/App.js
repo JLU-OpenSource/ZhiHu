@@ -13,6 +13,7 @@ import Collects from './componet/Collects.js';
 import './App.css';
 import UserApi from './api/UserApi.js';
 import Drafts from './componet/Drafts.js';
+import UserPanel from './componet/UserPanel.js';
 
 
 const { Content, Footer, Sider } = Layout;
@@ -168,7 +169,7 @@ class App extends React.Component {
             placement="right"
             onClose={this.onDrawerClose}
             closable={true}>
-            {this.state.currentUser == null ? <LoginForm /> : <Empty />}
+            {this.state.currentUser == null ? <LoginForm /> : <UserPanel user={JSON.parse(sessionStorage.getItem('user'))} />}
           </Drawer>
           <Footer style={{ textAlign: 'center' }}>©2019 Powered by <a href='https://ant.design/'
             target='_blank' rel="noopener noreferrer">Ant Design</a></Footer>

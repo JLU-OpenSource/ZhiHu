@@ -2,7 +2,7 @@ import moment from "moment";
 
 const AjaxApi = {
 
-  host: "http://127.0.0.1:8080",
+  host: "http://47.94.134.55:8080",
 
   body: function (body, args) {
     return {

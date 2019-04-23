@@ -1,7 +1,10 @@
 import React from 'react';
-import { List, Avatar, Icon, Empty, Typography, Pagination, Divider, message } from 'antd';
+import {
+  List, Avatar, Icon, Empty, Typography, Pagination,
+  Divider, message, Form, Input, Comment, Drawer
+} from 'antd';
 import 'braft-editor/dist/output.css'
-
+import Comments from './Comments'
 import AjaxApi from '../api/AjaxApi.js'
 
 class Article extends React.Component {
@@ -13,7 +16,8 @@ class Article extends React.Component {
     page: 1,
     count: 0,
     collectAcitve: false,
-    agreeAcitve: true
+    agreeAcitve: true,
+    showComments: false
   }
 
   async componentDidMount() {
@@ -86,7 +90,22 @@ class Article extends React.Component {
       this.state.comment.trim().length === 0) {
       message.error('不能发布空评论');
     } else {
-      console.log(this.state.comment)
+      const comment = {
+        content: this.state.comment,
+        author: JSON.parse(sessionStorage.getItem('user'))
+      }
+
+      AjaxApi.post('/api/comment/create', AjaxApi.body(comment, { id: this.state.article.id, type: 'article' })
+      ).then(response => {
+        if (response.status === 200) {
+          message.success("成功发表评论")
+          this.setState({ comment: '' })
+          const article = this.state.article;
+          article.comment.push(response.body);
+          this.setState({ article: article })
+        } else
+          message.error("发表评论失败")
+      })
     }
   }
 
@@ -173,7 +192,7 @@ class Article extends React.Component {
                     onClick={() => this.handleMetaDataClick(false)}><Icon type="star-o" style={{ marginRight: 8 }} />{this.state.article.collect.length} 收藏</span>,
                   <span className={this.state.agreeAcitve ? "active" : null}
                     onClick={() => this.handleMetaDataClick(true)}><Icon type="like-o" style={{ marginRight: 8 }} />{this.state.article.agree.length} 赞同</span>,
-                  <span><Icon type="message" style={{ marginRight: 8 }} />{item.comment.length} 评论</span>
+                  <span onClick={() => this.setState({ showComments: true })}><Icon type="message" style={{ marginRight: 8 }} />{item.comment.length} 评论</span>
                 ]}>
               <List.Item.Meta
                 avatar={<Avatar src={item.author.avatar} />}
@@ -189,8 +208,32 @@ class Article extends React.Component {
           )
           }
         />
+        <Form onSubmit={this.handleSubmit}>{this.state.article == null ? null :
+          <Comment
+            avatar={(
+              <Avatar
+                src={JSON.parse(sessionStorage.getItem('user')).avatar}
+                alt="Han Solo"
+              />
+            )}
+            content={(
+              <Input placeholder='输入评论内容，然后按下回车发布' value={this.state.comment}
+                onChange={(e) => { this.handleInputChange(e) }} />
+            )}
+          />
+        }
+        </Form>
+        <Drawer
+          width={500}
+          visible={this.state.showComments}
+          title='评论'
+          placement="right"
+          onClose={this.onDrawerClose}
+          closable={true}>
+          <Comments id={this.state.article == null ? 1 : this.state.article.id} type='article' />
+        </Drawer>
         <Pagination simple pageSize={1} current={this.state.page} onChange={this.onShowSizeChange}
-          total={this.state.count} style={{ marginTop: '10px', textAlign: 'center' }} />
+          total={this.state.count} style={{ marginTop: '30px', textAlign: 'center' }} />
       </div>
     );
   }
