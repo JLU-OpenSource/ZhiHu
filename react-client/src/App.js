@@ -134,7 +134,7 @@ class App extends React.Component {
             <Card
               hoverable
               style={{ width: 240 }}
-              cover={<img alt="example" src="https://s2.ax1x.com/2019/04/24/EVKRGd.png" />}
+              cover={<img alt="example" src="http://47.94.134.55:8080/code.png" />}
             >
               <Meta
                 title="下载知乎Android Apk"
