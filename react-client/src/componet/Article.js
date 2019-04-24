@@ -17,7 +17,7 @@ class Article extends React.Component {
     count: 0,
     collectAcitve: false,
     agreeAcitve: true,
-    showComments: false
+    showComments: false,
   }
 
   async componentDidMount() {
@@ -230,7 +230,7 @@ class Article extends React.Component {
           placement="right"
           onClose={this.onDrawerClose}
           closable={true}>
-          <Comments id={this.state.article == null ? 1 : this.state.article.id} type='article' />
+          {this.state.showComments ? <Comments id={this.state.page} type='article' /> : null}
         </Drawer>
         <Pagination simple pageSize={1} current={this.state.page} onChange={this.onShowSizeChange}
           total={this.state.count} style={{ marginTop: '30px', textAlign: 'center' }} />

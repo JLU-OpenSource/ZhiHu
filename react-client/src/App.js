@@ -1,5 +1,5 @@
 import React from 'react';
-import { LocaleProvider, Layout, Menu, Icon, Drawer, Empty } from 'antd';
+import { LocaleProvider, Layout, Menu, Icon, Drawer, Empty, Card, Row, Col } from 'antd';
 import zhCN from 'antd/lib/locale-provider/zh_CN';
 import Editor from './componet/Editor.js'
 import LoginForm from './componet/form/LoginForm.js';
@@ -18,13 +18,14 @@ import UserPanel from './componet/UserPanel.js';
 
 const { Content, Footer, Sider } = Layout;
 const SubMenu = Menu.SubMenu;
+const { Meta } = Card;
 
 class App extends React.Component {
 
   state = {
     tab: 'recommend',
     content: 'recommend',
-    loginFormVisible: false,
+    loginFormVisible: true,
     editorOptions: {
       type: 'question', body: {}
     },
@@ -127,6 +128,22 @@ class App extends React.Component {
         onSubmitArticle={(article) => this.setState({ content: 'article', article: article, tab: 'article' })} />;
       case 'collection': return <Collects />;
       case 'drafts': return <Drafts restoreDraft={this.handleDraftRestore} />
+      case 'android': return <div style={{ textAlign: 'center', marginTop: '100px' }}>
+        <Row>
+          <Col span={8} offset={8}>
+            <Card
+              hoverable
+              style={{ width: 240 }}
+              cover={<img alt="example" src="https://s2.ax1x.com/2019/04/24/EVKRGd.png" />}
+            >
+              <Meta
+                title="下载知乎Android Apk"
+                description="发现更大的世界"
+              />
+            </Card>
+          </Col>
+        </Row>
+      </div>
       default: return <Empty style={{ marginTop: '200px' }} />;
     }
   }
@@ -154,7 +171,7 @@ class App extends React.Component {
                   <Menu.Item key="collection"><span><Icon type="tags" />收藏夹</span></Menu.Item>
                   <Menu.Item key="drafts"><span><Icon type="file" />草稿箱</span></Menu.Item>
                   <Menu.Item key="about"><span><Icon type="info-circle" />关于本站</span></Menu.Item>
-                  <Menu.Item key="copyright"><span><Icon type="copyright" />版权所有</span></Menu.Item>
+                  <Menu.Item key="android"><span><Icon type="android" />下载Apk</span></Menu.Item>
                 </Menu>
               </Sider>
               <Content style={{ padding: '0 24px', minHeight: 620 }}>

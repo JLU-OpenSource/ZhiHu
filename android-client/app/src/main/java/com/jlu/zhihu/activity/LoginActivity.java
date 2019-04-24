@@ -17,8 +17,10 @@
 package com.jlu.zhihu.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -64,6 +66,9 @@ public class LoginActivity extends AppCompatActivity implements UserService.Logi
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
         userService.setLoginCallback(this);
+        SharedPreferences preferences = getSharedPreferences("zhihu.xml", MODE_PRIVATE);
+        String email = preferences.getString("email", "");
+        editTextEmail.setText(email);
     }
 
     @OnClick(R.id.ok)
@@ -73,6 +78,13 @@ public class LoginActivity extends AppCompatActivity implements UserService.Logi
         user.password = editTextPassword.getText().toString();
         boolean login = editTextName.getVisibility() == View.GONE;
         if (!login) user.name = editTextName.getText().toString();
+        if (TextUtils.isEmpty(user.email) || TextUtils.isEmpty(user.password) || (!login && TextUtils.isEmpty(user.name))) {
+            ToastUtil.msg("输入不能位空");
+            return;
+        } else {
+            SharedPreferences preferences = getSharedPreferences("zhihu.xml", MODE_PRIVATE);
+            preferences.edit().putString("email", user.email).apply();
+        }
         LogUtil.d(TAG, "start login user: " + user.toString());
         userService.go(user, login);
         loginButton.startAnimation();

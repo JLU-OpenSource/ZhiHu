@@ -152,12 +152,7 @@ public class ListFragment extends Fragment implements
 
     @Override
     public boolean handleMsg(int what, String msg, Object o) {
-        if (Event.Click.ON_QUESTION_CLICK == what) {
-            LogUtil.d(TAG, "receive msg: " + msg);
-            LogUtil.d(TAG, o.toString());
-            return true;
-        }
-        return false;
+        return true;
     }
 
     @Override
