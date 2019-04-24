@@ -21,12 +21,12 @@ public class Event {
 
     public static class Click {
         /* Answer Fragment */
-        public static final int ON_ANSWER_CLICK = 0x11000001;
+        public static final int ON_ANSWER_CLICK = 1;
 
         /* Question Fragment */
-        public static final int ON_QUESTION_CLICK = 0x21000001;
+        public static final int ON_QUESTION_CLICK = 2;
 
         /* Article Fragment */
-        public static final int ON_ARTICLE_CLICK = 0x31000001;
+        public static final int ON_ARTICLE_CLICK = 3;
     }
 }

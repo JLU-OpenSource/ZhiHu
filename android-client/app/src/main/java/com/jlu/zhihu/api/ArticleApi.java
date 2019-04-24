@@ -79,7 +79,7 @@ public class ArticleApi implements ArticleService {
         TaskRunner.execute(() -> {
             currentPage = 0;
             Response<List<Article>> response = OkHttpHelper.post(
-                    PATH_ALL_ARTICLE, listRequest(currentPage), TYPE_RESPONSE_LIST_QUESTION);
+                    PATH_ALL_ARTICLE, listRequest(currentPage), TYPE_RESPONSE_LIST_ARTICLE);
             if (response != null && response.status == OK)
                 listCallback.onRefresh(new ArrayList<>(response.body), refreshLayout);
             else listCallback.onRefresh(null, refreshLayout);
@@ -91,7 +91,7 @@ public class ArticleApi implements ArticleService {
         TaskRunner.execute(() -> {
             currentPage++;
             Response<List<Article>> response = OkHttpHelper.post(
-                    PATH_ALL_ARTICLE, listRequest(currentPage), TYPE_RESPONSE_LIST_QUESTION);
+                    PATH_ALL_ARTICLE, listRequest(currentPage), TYPE_RESPONSE_LIST_ARTICLE);
             if (response != null && response.status == OK)
                 listCallback.onLoadMore(new ArrayList<>(response.body), refreshLayout);
             else listCallback.onLoadMore(null, refreshLayout);
@@ -114,7 +114,7 @@ public class ArticleApi implements ArticleService {
             Request<Article> request = new Request<>();
             request.body = article;
             Response<Article> response = OkHttpHelper.
-                    post(PATH_ARTICLE_METADATA, request, TYPE_RESPONSE_ANSWER);
+                    post(PATH_ARTICLE_METADATA, request, TYPE_RESPONSE_ARTICLE);
             if (response.status != 200) {
                 ToastUtil.msg("操作失败，请稍后重试！");
             }

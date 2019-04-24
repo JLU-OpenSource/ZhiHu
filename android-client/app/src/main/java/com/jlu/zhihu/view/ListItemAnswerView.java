@@ -88,6 +88,6 @@ public class ListItemAnswerView extends LinearLayout implements ListItemView {
     @OnClick
     public void onItemClick() {
         EventBus.getInstance().sendMessage(Event.Click.ON_ANSWER_CLICK,
-                answer.aid, "on question click");
+                answer.aid, "on answer click");
     }
 }

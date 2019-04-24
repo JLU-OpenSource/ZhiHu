@@ -174,22 +174,19 @@ public class ListFragment extends Fragment implements
                 Intent intent = new Intent(getActivity(), ArticleActivity.class);
                 intent.putExtra("id", (int) o);
                 startActivity(intent);
-                break;
+                return true;
             }
             case Event.Click.ON_ANSWER_CLICK: {
                 Intent intent = new Intent(getActivity(), AnswerActivity.class);
                 intent.putExtra("id", (int) o);
                 startActivity(intent);
-                break;
+                return true;
             }
             case Event.Click.ON_QUESTION_CLICK:
                 initAnswers((int) o);
-                break;
-            default:
-                ToastUtil.msg("敬请期待");
-                break;
+                return true;
         }
-        return true;
+        return false;
     }
 
     @Override
