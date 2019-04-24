@@ -16,7 +16,6 @@
 
 package com.jlu.zhihu.api;
 
-import com.jlu.zhihu.api.service.ListService;
 import com.jlu.zhihu.api.service.QuestionService;
 import com.jlu.zhihu.model.Question;
 import com.jlu.zhihu.net.OkHttpHelper;
@@ -33,9 +32,9 @@ public class QuestionApi implements QuestionService {
 
     private int currentPage = 0;
 
-    private ListService.ListCallback listCallback;
+    private ListCallback listCallback;
 
-    private QuestionCallback singleCallback;
+    private QuestionCallback questionCallback;
 
     public static QuestionService getInstance() {
         if (instance == null) {
@@ -102,6 +101,6 @@ public class QuestionApi implements QuestionService {
 
     @Override
     public void setQuestionCallback(QuestionCallback callback) {
-        this.singleCallback = callback;
+        this.questionCallback = callback;
     }
 }

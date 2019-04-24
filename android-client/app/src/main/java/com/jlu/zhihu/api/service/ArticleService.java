@@ -16,7 +16,19 @@
 
 package com.jlu.zhihu.api.service;
 
+import com.jlu.zhihu.model.Article;
+
 public interface ArticleService extends ListService {
 
+    String PATH_ARTICLE = HOST + "/api/article";
+
     String PATH_ALL_ARTICLE = HOST + "/api/article/all";
+
+    void getArticle(int id);
+
+    interface ArticleCallback {
+        void onGetArticle(Article article);
+    }
+
+    void setArticleCallback(ArticleCallback articleCallback);
 }

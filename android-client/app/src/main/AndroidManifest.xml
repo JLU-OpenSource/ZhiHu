@@ -15,6 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
+        <activity android:name=".activity.ArticleActivity"></activity>
         <activity
             android:name=".activity.LoginActivity"
             android:screenOrientation="portrait">
@@ -26,9 +27,7 @@
         </activity>
         <activity
             android:name=".activity.MainActivity"
-            android:screenOrientation="portrait">
-
-        </activity>
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

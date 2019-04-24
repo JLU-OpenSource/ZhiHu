@@ -17,6 +17,7 @@
 package com.jlu.zhihu.fragment;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -28,6 +29,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.jlu.zhihu.R;
+import com.jlu.zhihu.activity.ArticleActivity;
 import com.jlu.zhihu.adapter.RecyclerViewAdapter;
 import com.jlu.zhihu.api.service.ListService;
 import com.jlu.zhihu.event.Event;
@@ -152,6 +154,11 @@ public class ListFragment extends Fragment implements
 
     @Override
     public boolean handleMsg(int what, String msg, Object o) {
+        if (what == Event.Click.ON_ARTICLE_CLICK) {
+            Intent intent = new Intent(getActivity(), ArticleActivity.class);
+            intent.putExtra("id", (int) o);
+            startActivity(intent);
+        } else ToastUtil.msg("敬请期待");
         return true;
     }
 

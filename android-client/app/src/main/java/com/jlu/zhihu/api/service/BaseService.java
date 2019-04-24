@@ -36,6 +36,8 @@ public interface BaseService {
 
     Type TYPE_RESPONSE_USER = new TypeToken<Response<User>>() {}.getType();
 
+    Type TYPE_RESPONSE_ARTICLE = new TypeToken<Response<Article>>() {}.getType();
+
     Type TYPE_RESPONSE_LIST_QUESTION = new TypeToken<Response<List<Question>>>() {}.getType();
 
     Type TYPE_RESPONSE_LIST_ANSWER = new TypeToken<Response<List<Answer>>>() {}.getType();

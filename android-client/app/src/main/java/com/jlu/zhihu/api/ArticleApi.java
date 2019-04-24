@@ -17,7 +17,6 @@
 package com.jlu.zhihu.api;
 
 import com.jlu.zhihu.api.service.ArticleService;
-import com.jlu.zhihu.api.service.ListService;
 import com.jlu.zhihu.model.Article;
 import com.jlu.zhihu.net.OkHttpHelper;
 import com.jlu.zhihu.net.Response;
@@ -33,7 +32,9 @@ public class ArticleApi implements ArticleService {
 
     private int currentPage = 0;
 
-    private ListService.ListCallback listCallback;
+    private ListCallback listCallback;
+
+    private ArticleCallback articleCallback;
 
     private ArticleApi() {
     }
@@ -46,6 +47,17 @@ public class ArticleApi implements ArticleService {
             }
         }
         return instance;
+    }
+
+    @Override
+    public void getArticle(int id) {
+        TaskRunner.execute(() -> {
+            Response<Article> response = OkHttpHelper.get(
+                    PATH_ARTICLE + "/" + id, TYPE_RESPONSE_ARTICLE);
+            if (response != null && response.status == OK)
+                this.articleCallback.onGetArticle(response.body);
+            else this.articleCallback.onGetArticle(null);
+        });
     }
 
     @Override
@@ -87,5 +99,10 @@ public class ArticleApi implements ArticleService {
     @Override
     public void setListCallback(ListCallback callback) {
         this.listCallback = callback;
+    }
+
+    @Override
+    public void setArticleCallback(ArticleCallback articleCallback) {
+        this.articleCallback = articleCallback;
     }
 }
