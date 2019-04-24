@@ -21,31 +21,46 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.jlu.zhihu.R;
+import com.jlu.zhihu.activity.AnswerActivity;
 import com.jlu.zhihu.activity.ArticleActivity;
+import com.jlu.zhihu.adapter.AnswerAdapter;
 import com.jlu.zhihu.adapter.RecyclerViewAdapter;
 import com.jlu.zhihu.api.service.ListService;
 import com.jlu.zhihu.event.Event;
 import com.jlu.zhihu.event.EventBus;
 import com.jlu.zhihu.event.EventHandler;
+import com.jlu.zhihu.model.Answer;
+import com.jlu.zhihu.net.OkHttpHelper;
+import com.jlu.zhihu.net.Request;
+import com.jlu.zhihu.net.Response;
 import com.jlu.zhihu.util.LogUtil;
 import com.jlu.zhihu.model.ListItemModel;
+import com.jlu.zhihu.util.TaskRunner;
 import com.jlu.zhihu.util.ToastUtil;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.constant.RefreshState;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.jlu.zhihu.api.service.AnswerService.PATH_ANSWER_QUESTION;
+import static com.jlu.zhihu.api.service.BaseService.OK;
+import static com.jlu.zhihu.api.service.BaseService.TYPE_RESPONSE_LIST_ANSWER;
 
 public class ListFragment extends Fragment implements
         ScrollToHeadListener, EventHandler, ListService.ListCallback {
@@ -154,11 +169,26 @@ public class ListFragment extends Fragment implements
 
     @Override
     public boolean handleMsg(int what, String msg, Object o) {
-        if (what == Event.Click.ON_ARTICLE_CLICK) {
-            Intent intent = new Intent(getActivity(), ArticleActivity.class);
-            intent.putExtra("id", (int) o);
-            startActivity(intent);
-        } else ToastUtil.msg("敬请期待");
+        switch (what) {
+            case Event.Click.ON_ARTICLE_CLICK: {
+                Intent intent = new Intent(getActivity(), ArticleActivity.class);
+                intent.putExtra("id", (int) o);
+                startActivity(intent);
+                break;
+            }
+            case Event.Click.ON_ANSWER_CLICK: {
+                Intent intent = new Intent(getActivity(), AnswerActivity.class);
+                intent.putExtra("id", (int) o);
+                startActivity(intent);
+                break;
+            }
+            case Event.Click.ON_QUESTION_CLICK:
+                initAnswers((int) o);
+                break;
+            default:
+                ToastUtil.msg("敬请期待");
+                break;
+        }
         return true;
     }
 
@@ -169,5 +199,35 @@ public class ListFragment extends Fragment implements
         if (recyclerView.canScrollVertically(SCROLL_VERTICALLY_UP))
             recyclerView.scrollToPosition(0);
         else refreshLayout.autoRefresh();
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void initAnswers(int id) {
+        TaskRunner.execute(() -> {
+            Request<Integer> request = new Request<>();
+            request.body = id;
+            request.args = new HashMap<>();
+            request.args.put("page", "0");
+            request.args.put("size", "10000");
+            Response<List<Answer>> response = OkHttpHelper.post(
+                    PATH_ANSWER_QUESTION, request, TYPE_RESPONSE_LIST_ANSWER);
+            if (response != null && response.status == OK) {
+                List<Answer> answers = response.body;
+                eventBus.onMainThread(() -> {
+                    BottomSheetDialog dialog = new BottomSheetDialog(Objects.requireNonNull(getActivity()));
+                    @SuppressLint("InflateParams")
+                    View contentView = getLayoutInflater().inflate(R.layout.dialog_commets, null);
+                    dialog.setContentView(contentView);
+                    RecyclerView recyclerView = contentView.findViewById(R.id.list);
+                    TextView textView = contentView.findViewById(R.id.title);
+                    textView.setText(answers.size() + "个回答");
+                    recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                    recyclerView.setAdapter(new AnswerAdapter(getActivity(), answers));
+                    dialog.show();
+                });
+            } else {
+                ToastUtil.msg("加载失败，请稍后重试。");
+            }
+        });
     }
 }

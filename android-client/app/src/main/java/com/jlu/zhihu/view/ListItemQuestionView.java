@@ -77,6 +77,6 @@ public class ListItemQuestionView extends LinearLayout implements ListItemView {
     @OnClick
     public void onItemClick() {
         EventBus.getInstance().sendMessage(Event.Click.ON_QUESTION_CLICK,
-                question, "on question click");
+                question.id, "on question click");
     }
 }

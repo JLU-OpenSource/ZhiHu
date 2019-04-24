@@ -16,7 +16,25 @@
 
 package com.jlu.zhihu.api.service;
 
-public interface AnswerService extends ListService{
+import com.jlu.zhihu.model.Answer;
 
+import java.util.List;
+
+public interface AnswerService extends ListService {
+
+    String PATH_ANSWER = HOST + "/api/answer";
     String PATH_ALL_ANSWER = HOST + "/api/answer/all";
+    String PATH_ANSWER_METADATA = HOST + "/api/answer/metadata";
+    String PATH_ANSWER_QUESTION = HOST + "/api/answer/question";
+
+    void getAnswer(int id);
+
+    interface AnswerCallback {
+
+        void onGetAnswer(Answer answer);
+    }
+
+    void setAnswerCallback(AnswerCallback answerCallback);
+
+    void metaData(Answer answer);
 }

@@ -21,8 +21,8 @@ import com.jlu.zhihu.model.Article;
 public interface ArticleService extends ListService {
 
     String PATH_ARTICLE = HOST + "/api/article";
-
     String PATH_ALL_ARTICLE = HOST + "/api/article/all";
+    String PATH_ARTICLE_METADATA = HOST + "/api/article/metadata";
 
     void getArticle(int id);
 
@@ -31,4 +31,6 @@ public interface ArticleService extends ListService {
     }
 
     void setArticleCallback(ArticleCallback articleCallback);
+
+    void metadata(Article article);
 }

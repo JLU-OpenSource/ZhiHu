@@ -19,8 +19,10 @@ package com.jlu.zhihu.api;
 import com.jlu.zhihu.api.service.ArticleService;
 import com.jlu.zhihu.model.Article;
 import com.jlu.zhihu.net.OkHttpHelper;
+import com.jlu.zhihu.net.Request;
 import com.jlu.zhihu.net.Response;
 import com.jlu.zhihu.util.TaskRunner;
+import com.jlu.zhihu.util.ToastUtil;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 
 import java.util.ArrayList;
@@ -104,5 +106,18 @@ public class ArticleApi implements ArticleService {
     @Override
     public void setArticleCallback(ArticleCallback articleCallback) {
         this.articleCallback = articleCallback;
+    }
+
+    @Override
+    public void metadata(Article article) {
+        TaskRunner.execute(() -> {
+            Request<Article> request = new Request<>();
+            request.body = article;
+            Response<Article> response = OkHttpHelper.
+                    post(PATH_ARTICLE_METADATA, request, TYPE_RESPONSE_ANSWER);
+            if (response.status != 200) {
+                ToastUtil.msg("操作失败，请稍后重试！");
+            }
+        });
     }
 }

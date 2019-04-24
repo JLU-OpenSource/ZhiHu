@@ -23,4 +23,6 @@ public class Comment {
     public String content;
 
     public User author;
+
+    public long st;
 }

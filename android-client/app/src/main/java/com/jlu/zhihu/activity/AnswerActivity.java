@@ -18,11 +18,11 @@ package com.jlu.zhihu.activity;
 
 import android.annotation.SuppressLint;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -33,20 +33,22 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.jlu.zhihu.R;
 import com.jlu.zhihu.adapter.CommentAdapter;
-import com.jlu.zhihu.api.ArticleApi;
+import com.jlu.zhihu.api.AnswerApi;
 import com.jlu.zhihu.api.UserApi;
-import com.jlu.zhihu.api.service.ArticleService;
-import com.jlu.zhihu.model.Article;
+import com.jlu.zhihu.api.service.AnswerService;
+import com.jlu.zhihu.model.Answer;
 import com.jlu.zhihu.model.User;
 import com.jlu.zhihu.net.HtmlRender;
 import com.jlu.zhihu.util.ToastUtil;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class ArticleActivity extends AppCompatActivity implements
-        HtmlRender.RenderCallback, ArticleService.ArticleCallback {
+public class AnswerActivity extends AppCompatActivity implements
+        HtmlRender.RenderCallback, AnswerService.AnswerCallback {
 
     @BindView(R.id.web_view)
     WebView webView;
@@ -60,31 +62,34 @@ public class ArticleActivity extends AppCompatActivity implements
     @BindView(R.id.author_sign)
     TextView textViewAuthorSign;
 
+    @BindView(R.id.title)
+    TextView textViewTitle;
+
     @BindView(R.id.like)
     ImageView imageViewLike;
 
     @BindView(R.id.star)
     ImageView imageViewStar;
 
-    private ArticleService articleService = ArticleApi.getInstance();
-
-    private Handler handler = new Handler(Looper.getMainLooper());
-
     private boolean agree = false, collect = false;
 
-    private Article article = null;
+    private AnswerService answerService = AnswerApi.getInstance();
 
     private final User user = UserApi.getService().getLoginUser();
+
+    private Answer answer = null;
+
+    private Handler handler = new Handler(Looper.getMainLooper());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_article);
+        setContentView(R.layout.activity_answer);
         ButterKnife.bind(this);
         int id = getIntent().getIntExtra("id", 1);
-        HtmlRender.render("http://47.94.134.55:8080/article/" + id + ".html", this);
-        articleService.getArticle(id);
-        articleService.setArticleCallback(this);
+        HtmlRender.render("http://47.94.134.55:8080/answer/" + id + ".html", this);
+        answerService.getAnswer(id);
+        answerService.setAnswerCallback(this);
     }
 
 
@@ -94,19 +99,20 @@ public class ArticleActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onGetArticle(Article article) {
-        this.article = article;
+    public void onGetAnswer(Answer answer) {
+        this.answer = answer;
         handler.post(() -> {
             Glide.with(this)
-                    .load(article.author.avatar)
+                    .load(answer.author.avatar)
                     .placeholder(R.drawable.avatar)
                     .error(R.drawable.avatar)
                     .into(imageViewAvatar);
 
-            textViewName.setText(article.author.name);
-            textViewAuthorSign.setText(article.author.sign);
-            agree = article.agree.contains(user);
-            collect = article.collect.contains(user);
+            textViewName.setText(answer.author.name);
+            textViewAuthorSign.setText(answer.author.sign);
+            textViewTitle.setText(answer.title);
+            agree = answer.agree.contains(user);
+            collect = answer.collect.contains(user);
             initMetaData();
         });
     }
@@ -120,24 +126,24 @@ public class ArticleActivity extends AppCompatActivity implements
 
     @OnClick(R.id.like)
     void agree() {
-        if (article == null) return;
+        if (answer == null) return;
         agree = !agree;
         initMetaData();
         ToastUtil.msg(agree ? "已赞同" : "已取消赞同");
-        if (agree) article.agree.add(user);
-        else article.agree.remove(user);
-        articleService.metadata(article);
+        if (agree) answer.agree.add(user);
+        else answer.agree.remove(user);
+        answerService.metaData(answer);
     }
 
     @OnClick(R.id.star)
     void star() {
-        if (article == null) return;
+        if (answer == null) return;
         collect = !collect;
         initMetaData();
         ToastUtil.msg(collect ? "已收藏" : "已取消收藏");
-        if (collect) article.collect.add(user);
-        else article.collect.remove(user);
-        articleService.metadata(article);
+        if (collect) answer.collect.add(user);
+        else answer.collect.remove(user);
+        answerService.metaData(answer);
     }
 
     @SuppressLint("SetTextI18n")
@@ -148,9 +154,9 @@ public class ArticleActivity extends AppCompatActivity implements
         dialog.setContentView(contentView);
         RecyclerView recyclerView = contentView.findViewById(R.id.list);
         TextView textView = contentView.findViewById(R.id.title);
-        textView.setText(article.comment.size() + "条评论");
+        textView.setText(answer.comment.size() + "条评论");
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new CommentAdapter(this, article.comment));
+        recyclerView.setAdapter(new CommentAdapter(this, answer.comment));
         dialog.show();
     }
 }

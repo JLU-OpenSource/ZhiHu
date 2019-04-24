@@ -68,4 +68,6 @@
     <string name="register">注册知乎账号</string>
     <string name="input_name">输入昵称</string>
     <string name="submit_an_article">发表了文章</string>
+    <string name="answer_a_question">回答了问题</string>
+    <string name="comment">评论</string>
 </resources>

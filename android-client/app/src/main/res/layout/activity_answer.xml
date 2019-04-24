@@ -22,7 +22,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/color_action_bar"
-    tools:context=".activity.ArticleActivity">
+    tools:context=".activity.AnswerActivity">
 
     <LinearLayout
         android:id="@+id/search_box"
@@ -86,6 +86,20 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                android:textColor="@color/color_black"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/color_light_grey" />
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -113,7 +127,7 @@
                     android:layout_marginStart="5dp"
                     android:layout_marginTop="2dp"
                     android:layout_toEndOf="@id/author_name"
-                    android:text="@string/submit_an_article"
+                    android:text="@string/answer_a_question"
                     android:textSize="15sp" />
 
                 <TextView
