@@ -9,7 +9,7 @@
     "braft-extensions": "^0.0.18",
     "customize-cra": "^0.2.12",
     "draft-js-prism": "^1.0.6",
-    "prismjs": "^1.16.0",
+    "prismjs": "^1.27.0",
     "react": "^16.8.6",
     "react-app-rewired": "^2.1.1",
     "react-dom": "^16.8.6",
